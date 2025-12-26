@@ -1,4 +1,4 @@
-package apiTurnos.barber.Repository;
+package apiTurnos.barber.repository;
 
 public class BarberCommandRepository {
 }

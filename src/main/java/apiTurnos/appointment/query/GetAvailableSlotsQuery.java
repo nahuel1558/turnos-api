@@ -1,4 +1,10 @@
 package apiTurnos.appointment.query;
 
-public class GetAvailableSlotsQuery {
+import java.time.LocalDate;
+
+public record GetAvailableSlotsQuery(
+        Long barberId,
+        Long serviceId,
+        LocalDate date
+) {
 }

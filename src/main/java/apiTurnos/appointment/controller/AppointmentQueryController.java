@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Controller REST para consultas de turnos.
+ * No realiza lógica de negocio, solo delega al handler.
+ */
 @RestController
 @RequestMapping("/api/appointments")
 @RequiredArgsConstructor
@@ -17,6 +21,9 @@ public class AppointmentQueryController {
 
     private final GetAvailableSlotsHandler handler;
 
+    /**
+     * Devuelve los horarios disponibles para un peluquero y servicio en una fecha.
+     */
     @GetMapping("/available")
     public List<AvailableSlotResponse> available(
             @RequestParam Long barberId,

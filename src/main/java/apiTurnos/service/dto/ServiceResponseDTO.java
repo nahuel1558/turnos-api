@@ -1,7 +1,7 @@
 package apiTurnos.service.dto;
-/**
- * Clase utilizada para las respuestas/get del Service.
- * */
+/*
+  Clase utilizada para las respuestas/get del Service.
+  */
 
 import lombok.*;
 
@@ -26,5 +26,5 @@ public class ServiceResponseDTO {
     private LocalDateTime updateAt;
 
     // Variable que marca si esta activo o no el Service.
-    private Boolean activate;
+    private Boolean active;
 }

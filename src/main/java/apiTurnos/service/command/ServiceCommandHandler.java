@@ -16,7 +16,7 @@ public class ServiceCommandHandler {
     private final ServiceCommandRepository commandRepository;
 
     // Crear
-    public ServiceResponseDTO handle(CreateServiceCommand command){
+    public ServiceResponseDTO handleCreate(CreateServiceCommand command){
         ServiceRequestDTO request = command.getServiceRequest();
 
         // Validar unicidad del nombre.
@@ -39,7 +39,7 @@ public class ServiceCommandHandler {
     }
 
     // Actualizar
-    public ServiceResponseDTO handle(UpdateServiceCommand command){
+    public ServiceResponseDTO handleUpdate(UpdateServiceCommand command){
         ServiceRequestDTO requestDTO = command.getServiceRequest();
 
         // Buscar servicio por ID.
@@ -64,7 +64,7 @@ public class ServiceCommandHandler {
     }
 
     // Borrar
-    public void handle(DeleteServiceCommand command){
+    public void handleDelete(DeleteServiceCommand command){
         ServiceItem serviceItem = commandRepository.findById(command.getIdService())
                 .orElseThrow(() -> new IllegalArgumentException("Servicio no encontrado"));
 
@@ -81,7 +81,7 @@ public class ServiceCommandHandler {
                 .description(serviceItem.getDescription())
                 .durationMinutes(serviceItem.getDurationMinutes())
                 .price(serviceItem.getPrice())
-                .activate(serviceItem.getActive())
+                .active(serviceItem.getActive())
                 .createdAt(serviceItem.getCreatedAt())
                 .updateAt(serviceItem.getUpdateAt())
                 .build();

@@ -44,12 +44,23 @@ public class ServiceQueryHandler {
     }
 
     //Obtener servicio por ID.
-    public ServiceResponseDTO handle(GetServiceByIdQuery query){
+    public ServiceResponseDTO handleById(GetServiceByIdQuery query){
         ServiceItem serviceItem = queryRepository.findByIdAndActiveTrue(query.getIdService())
                 .orElseThrow(() -> new IllegalArgumentException("Servicio no encontrado o inactivo."));
         return mapToResponseDTO(serviceItem);
     }
 
     // Metodo para mapear. Agregar un paquete y clase para estos mapeos aparte.
-
+    private ServiceResponseDTO mapToResponseDTO(ServiceItem serviceItem){
+        return ServiceResponseDTO.builder()
+                .idService(serviceItem.getId())
+                .name(serviceItem.getName())
+                .description(serviceItem.getDescription())
+                .durationMinutes(serviceItem.getDurationMinutes())
+                .price(serviceItem.getPrice())
+                .active(serviceItem.getActive())
+                .createdAt(serviceItem.getCreatedAt())
+                .updateAt(serviceItem.getUpdateAt())
+                .build();
+    }
 }

@@ -1,7 +1,7 @@
 package apiTurnos.service.controller;
-/**
- * Clase que comunica el Front con el Back
- * */
+/*
+  Clase que comunica el Front con el Back
+  */
 
 import apiTurnos.service.command.*;
 import apiTurnos.service.dto.ServiceRequestDTO;
@@ -31,7 +31,7 @@ public class ServiceController {
     public ResponseEntity<?> createService(@Valid @RequestBody ServiceRequestDTO requestDTO){
         try{
             CreateServiceCommand command = CreateServiceCommand.fromRequest(requestDTO);
-            var response = commandHandler.handle(command);
+            var response = commandHandler.handleCreate(command);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -57,4 +57,45 @@ public class ServiceController {
         var services = queryHandler.handle(query);
         return ResponseEntity.ok(services);
     }
+
+    // BUSCAR BY ID
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getServiceById(@PathVariable Long id){
+        try{
+            GetServiceByIdQuery query = GetServiceByIdQuery.builder()
+                    .idService(id)
+                    .build();
+            var service = queryHandler.handleById(query);
+            return ResponseEntity.ok(service);
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body((e.getMessage()));
+        }
+    }
+
+    // ACTUALIZAR
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateService(@PathVariable Long id, @Valid @RequestBody ServiceRequestDTO requestDTO){
+        try {
+            UpdateServiceCommand command = UpdateServiceCommand.fromRequest(id, requestDTO);
+            var response = commandHandler.handleUpdate(command);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // BORRAR (soft delete)
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteService(@PathVariable Long id){
+        try{
+            DeleteServiceCommand command = DeleteServiceCommand.builder()
+                    .idService(id)
+                    .build();
+            commandHandler.handleDelete(command);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e){
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
 }

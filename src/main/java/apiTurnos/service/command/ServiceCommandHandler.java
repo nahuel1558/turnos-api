@@ -2,6 +2,7 @@ package apiTurnos.service.command;
 
 import apiTurnos.service.dto.ServiceResponseDTO;
 import apiTurnos.service.dto.ServiceRequestDTO;
+import apiTurnos.service.mapper.ServiceMapper;
 import apiTurnos.service.model.ServiceItem;
 import apiTurnos.service.repository.ServiceCommandRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,25 +16,19 @@ public class ServiceCommandHandler {
 
     private final ServiceCommandRepository commandRepository;
 
+    private final ServiceMapper serviceMapper;
+
     // Crear
     public ServiceResponseDTO handleCreate(CreateServiceCommand command){
         ServiceRequestDTO request = command.getServiceRequest();
-
         // Validar unicidad del nombre.
-        if(commandRepository.existByNameAndActiveTrue(request.getName())){
+        if(existServiceItemByNameAndActiveTrue(request.getName())){
             throw new IllegalArgumentException("Ya existe un servicio activo con ese nombre.");
         }
-
         // Crear entidad.
-        ServiceItem serviceItem = ServiceItem.builder()
-                .name(request.getName())
-                .description(request.getDescription())
-                .durationMinutes(request.getDurationMinutes())
-                .price(request.getPrice())
-                .active(true)
-                .build();
+        ServiceItem serviceItem = mapToModel(request);
 
-        ServiceItem saved = commandRepository.save(serviceItem);
+        ServiceItem saved = saveServiceItem(serviceItem);
 
         return mapToResponseDTO(saved);
     }
@@ -65,25 +60,41 @@ public class ServiceCommandHandler {
 
     // Borrar
     public void handleDelete(DeleteServiceCommand command){
-        ServiceItem serviceItem = commandRepository.findById(command.getIdService())
-                .orElseThrow(() -> new IllegalArgumentException("Servicio no encontrado"));
-
+        ServiceItem serviceItem = findServiceItemById(command.getIdService());
         // Soft delete.
         serviceItem.deactive();
-        commandRepository.save(serviceItem);
+        saveServiceItem(serviceItem);
     }
 
-    // Metodo auxiliar para mapear. Debemos crear un paquete de mappers.
+    /*
+    *  ---  METODOS PARA GUARDAR/BUSCAR/MODIFICAR/BORRAR OBJETOS EN REPOSITORY  ---
+    */
+
+    // Metodo que conecta con el paquete de Repository y guarda el objeto enviado.
+    private ServiceItem saveServiceItem(ServiceItem serviceItem){
+       return commandRepository.save(serviceItem);
+    }
+
+    // Metodo que conecta con el paquete de Repository y busca un servicio por ID.
+    private ServiceItem findServiceItemById(Long idService){
+        return commandRepository.findById(idService)
+                .orElseThrow(() -> new IllegalArgumentException("Servicio no encontrado"));
+    }
+
+    private boolean existServiceItemByNameAndActiveTrue(String name){
+        return commandRepository.existByNameAndActiveTrue(name);
+    }
+
+
+    /*
+    *  ---  METODOS PARA MAPEAR OBJETOS EN MAPPER  ---
+    */
+    // Metodo que sirve de conexion con la clase de Mapeo de obejtos. De Resquest a Model.
+    private ServiceItem mapToModel(ServiceRequestDTO serviceRequestDTO){
+        return serviceMapper.mapToServiceItem(serviceRequestDTO);
+    }
+    // Metodo que sirve de conexion con la clase de Mapeo de obejtos. Este es de Model a Response.
     private ServiceResponseDTO mapToResponseDTO(ServiceItem serviceItem){
-        return ServiceResponseDTO.builder()
-                .idService(serviceItem.getId())
-                .name(serviceItem.getName())
-                .description(serviceItem.getDescription())
-                .durationMinutes(serviceItem.getDurationMinutes())
-                .price(serviceItem.getPrice())
-                .active(serviceItem.getActive())
-                .createdAt(serviceItem.getCreatedAt())
-                .updateAt(serviceItem.getUpdateAt())
-                .build();
+        return serviceMapper.mapToServiceResponse(serviceItem);
     }
 }

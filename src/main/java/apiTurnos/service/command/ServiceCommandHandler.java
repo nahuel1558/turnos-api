@@ -38,22 +38,16 @@ public class ServiceCommandHandler {
         ServiceRequestDTO requestDTO = command.getServiceRequest();
 
         // Buscar servicio por ID.
-        ServiceItem service = commandRepository.findById(command.getIdService())
-                .orElseThrow(() -> new IllegalArgumentException("Servicio no encontrado."));
-
-        // Validar que este activo.
-        if (!service.getActive()){
-            throw new IllegalArgumentException("No se puede modificar un servicio inactivo");
-        }
+        ServiceItem service = findServiceItemById(command.getIdService());
 
         // validar unicidad del nombre (excluyendo el actual)
-        if(commandRepository.existByNameAndIdNotActiveTrue(requestDTO.getName(), command.getIdService())){
+        if(existServiceItemByNameIdNotActiveTrue(requestDTO.getName(), command.getIdService())){
             throw new IllegalArgumentException("Ya existe otro servicio activo con ese nombre.");
         }
 
         // Actualizar servicio.
         service.updateFromDTO(requestDTO);
-        ServiceItem updated =  commandRepository.save(service);
+        ServiceItem updated =  saveServiceItem(service);
 
         return mapToResponseDTO(updated);
     }
@@ -81,10 +75,15 @@ public class ServiceCommandHandler {
                 .orElseThrow(() -> new IllegalArgumentException("Servicio no encontrado"));
     }
 
+    // Metodo para saber si existe un Servicio con el mismo nombre que este activado.
     private boolean existServiceItemByNameAndActiveTrue(String name){
         return commandRepository.existByNameAndActiveTrue(name);
     }
 
+    // Metodos para saber si existe un Servicio con el mismo nombre.
+    private boolean existServiceItemByNameIdNotActiveTrue(String name, Long idService){
+        return commandRepository.existByNameAndIdNotActiveTrue(name, idService);
+    }
 
     /*
     *  ---  METODOS PARA MAPEAR OBJETOS EN MAPPER  ---

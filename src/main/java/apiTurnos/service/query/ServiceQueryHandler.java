@@ -1,6 +1,7 @@
 package apiTurnos.service.query;
 
 import apiTurnos.service.dto.ServiceResponseDTO;
+import apiTurnos.service.mapper.ServiceMapper;
 import apiTurnos.service.model.ServiceItem;
 import apiTurnos.service.repository.ServiceQueryRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 public class ServiceQueryHandler {
 
     private final ServiceQueryRepository queryRepository;
+    private final ServiceMapper serviceMapper;
 
     // Listar todos los servicios (con filtros). Aca hay que modificar y separar los metodos.
     public List<ServiceResponseDTO> handle(GetServicesQuery query){
@@ -43,24 +45,19 @@ public class ServiceQueryHandler {
                 .collect(Collectors.toList());
     }
 
-    //Obtener servicio por ID.
+    //Obtener servicio por ID y que este activo.
     public ServiceResponseDTO handleById(GetServiceByIdQuery query){
-        ServiceItem serviceItem = queryRepository.findByIdAndActiveTrue(query.getIdService())
-                .orElseThrow(() -> new IllegalArgumentException("Servicio no encontrado o inactivo."));
-        return mapToResponseDTO(serviceItem);
+        return mapToResponseDTO(findServiceItemByIdAndActiveTrue(query));
+    }
+
+    // Metodo para encontrar un servicio por ID y que este activo comunicandose con queryRepository.
+    private ServiceItem findServiceItemByIdAndActiveTrue(GetServiceByIdQuery query){
+        return  queryRepository.findByIdAndActiveTrue(query.getIdService())
+                .orElseThrow(() -> new IllegalArgumentException("Servicio no escontrado o inactivo."));
     }
 
     // Metodo para mapear. Agregar un paquete y clase para estos mapeos aparte.
     private ServiceResponseDTO mapToResponseDTO(ServiceItem serviceItem){
-        return ServiceResponseDTO.builder()
-                .idService(serviceItem.getId())
-                .name(serviceItem.getName())
-                .description(serviceItem.getDescription())
-                .durationMinutes(serviceItem.getDurationMinutes())
-                .price(serviceItem.getPrice())
-                .active(serviceItem.getActive())
-                .createdAt(serviceItem.getCreatedAt())
-                .updateAt(serviceItem.getUpdateAt())
-                .build();
+        return serviceMapper.mapToServiceResponse(serviceItem);
     }
 }

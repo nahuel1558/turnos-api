@@ -4,7 +4,11 @@ import apiTurnos.service.dto.ServiceResponseDTO;
 import apiTurnos.service.mapper.ServiceMapper;
 import apiTurnos.service.model.ServiceItem;
 import apiTurnos.service.repository.ServiceQueryRepository;
+import apiTurnos.service.specification.ServiceSpecificationBuilder;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,31 +18,26 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true) // Solo lectura para consultas.
+@Slf4j
 public class ServiceQueryHandler {
 
     private final ServiceQueryRepository queryRepository;
     private final ServiceMapper serviceMapper;
+    private final ServiceSpecificationBuilder specificationBuilder;
 
-    // Listar todos los servicios (con filtros). Aca hay que modificar y separar los metodos.
-    public List<ServiceResponseDTO> handle(GetServicesQuery query){
-        List<ServiceItem> serviceItems;
+    // Listar todos los servicios (con filtros).
+    public List<ServiceResponseDTO> handle(GetServicesQuery query) {
 
-        if (query.getIncludeInactive() != null && query.getIncludeInactive()){
-            //Incluye los inactivos.
-            serviceItems = queryRepository.findAll();
-        } else if (query.getSearchTerm() != null &&  !query.getSearchTerm().isEmpty()) {
-            // Busca por termino.
-            serviceItems = queryRepository.searchActiveServices(query.getSearchTerm());
-        } else if (query.getMaxDuration() != null) {
-            // Filtrar por duración máxima
-            serviceItems = queryRepository.findByActiveTrueAndDurationMinutesLessThanEqual(query.getMaxDuration());
-        } else if (query.getMinPrice() != null && query.getMaxPrice() != null) {
-            // Filtrar por rango de precio
-            serviceItems = queryRepository.findByActiveTrueAndPriceBetween(query.getMinPrice(), query.getMaxPrice());
-        } else {
-            // Solo activos
-            serviceItems = queryRepository.findAllByActiveTrue();
-        }
+        log.info("Procesando query de servicios con filtros: {}", query);
+
+        Specification<ServiceItem> spec = specificationBuilder.buildFromQuery(query);
+
+        // Ordenar por "NOMBRE" de manera ascendente.
+        Sort sort = Sort.by(Sort.Direction.ASC, "name");
+
+        List<ServiceItem> serviceItems = queryRepository.findAll(spec, sort);
+
+        log.info("Encontrados {} servicios", serviceItems.size());
 
         return serviceItems.stream()
                 .map(this::mapToResponseDTO)

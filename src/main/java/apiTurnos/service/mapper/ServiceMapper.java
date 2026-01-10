@@ -4,6 +4,9 @@ import apiTurnos.service.dto.ServiceRequestDTO;
 import apiTurnos.service.dto.ServiceResponseDTO;
 import apiTurnos.service.model.ServiceItem;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 public class ServiceMapper {
 
@@ -36,5 +39,10 @@ public class ServiceMapper {
                 .build();
 
         return  serviceResponseDTO;
+    }
+
+    //Mapear una lista de "ServiceItem" a una lista de "ServiceResponseDTO".
+    public List<ServiceResponseDTO> mapToListServiceResponse (List<ServiceItem> serviceItems){
+        return serviceItems.stream().map(this::mapToServiceResponse).collect(Collectors.toList());
     }
 }

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,18 +29,33 @@ public class ServiceQueryHandler {
 
         log.info("Procesando query de servicios con filtros: {}", query);
 
-        Specification<ServiceItem> spec = specificationBuilder.buildFromQuery(query);
-
-        // Ordenar por "NOMBRE" de manera ascendente.
-        Sort sort = Sort.by(Sort.Direction.ASC, "name");
-
-        List<ServiceItem> serviceItems = queryRepository.findAll(spec, sort);
+        List<ServiceItem> serviceItems = findAllServiceItemsWithSorting(query);
 
         log.info("Encontrados {} servicios", serviceItems.size());
 
-        return serviceItems.stream()
-                .map(this::mapToResponseDTO)
-                .collect(Collectors.toList());
+        return mapToListServiceResponseDTO(serviceItems);
+    }
+
+    //Metodo para comunicarse con "QueryRepository" y traer todos los objetos.
+    private List<ServiceItem> findAllServiceItemsWithSorting(GetServicesQuery query){
+        Specification<ServiceItem> spec = buildServiceSpecification(query);
+        Sort sort = createNameAscSort();
+        return queryRepository.findAll(spec, sort);
+    }
+
+    //Metodo para contruir el "SERVICE" con las "ESPECIFICACIONES".
+    private Specification<ServiceItem> buildServiceSpecification(GetServicesQuery query){
+        return specificationBuilder.buildFromQuery(query);
+    }
+
+    //Metodo para definir el orden del "SERVICE".
+    private Sort createNameAscSort(){
+        return Sort.by(Sort.Direction.ASC, "name");
+    }
+
+    //Metodo para mapear una "List<ServiceItem>" a "List<ServiceResponseDTO>.
+    private List<ServiceResponseDTO> mapToListServiceResponseDTO(List<ServiceItem> serviceItems){
+        return serviceMapper.mapToListServiceResponse(serviceItems);
     }
 
     //Obtener servicio por ID y que este activo.
@@ -55,7 +69,7 @@ public class ServiceQueryHandler {
                 .orElseThrow(() -> new IllegalArgumentException("Servicio no escontrado o inactivo."));
     }
 
-    // Metodo para mapear. Agregar un paquete y clase para estos mapeos aparte.
+    // Metodo para mapear un objeto de model a response.
     private ServiceResponseDTO mapToResponseDTO(ServiceItem serviceItem){
         return serviceMapper.mapToServiceResponse(serviceItem);
     }

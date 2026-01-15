@@ -25,7 +25,7 @@ public class ServiceQueryHandler {
     private final ServiceSpecificationBuilder specificationBuilder;
 
     // Listar todos los servicios (con filtros).
-    public List<ServiceResponseDTO> handle(GetServicesQuery query) {
+    public List<ServiceResponseDTO> handleGetAllServices(GetServicesQuery query) {
 
         log.info("Procesando query de servicios con filtros: {}", query);
 

@@ -1,4 +1,4 @@
-package apiTurnos.common.exception;
+package apiTurnos.service.domain.exception;
 
 public class DomainValidationException extends RuntimeException {
     public DomainValidationException(String message) {

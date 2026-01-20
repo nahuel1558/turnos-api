@@ -1,6 +1,5 @@
 package apiTurnos.service.infrastructure.mapper;
 
-import apiTurnos.service.presentation.dto.request.ServiceRequestDTO;
 import apiTurnos.service.presentation.dto.response.ServiceResponseDTO;
 import apiTurnos.service.domain.model.ServiceItem;
 

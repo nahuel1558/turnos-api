@@ -1,6 +1,6 @@
 package apiTurnos.service.domain.model;
 
-import apiTurnos.common.exception.DomainValidationException;
+import apiTurnos.service.domain.exception.DomainValidationException;
 import apiTurnos.service.presentation.dto.request.ServiceRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;

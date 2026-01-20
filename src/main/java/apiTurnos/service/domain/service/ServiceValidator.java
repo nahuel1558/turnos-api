@@ -1,7 +1,7 @@
 package apiTurnos.service.domain.service;
 
 import apiTurnos.service.domain.model.ServiceItem;
-import apiTurnos.common.exception.DomainValidationException;
+import apiTurnos.service.domain.exception.DomainValidationException;
 import org.springframework.stereotype.Service;
 
 @Service

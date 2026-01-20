@@ -1,8 +1,8 @@
 package apiTurnos.service.controller.command;
 
 import apiTurnos.service.command.*;
-import apiTurnos.service.dto.ServiceRequestDTO;
-import apiTurnos.service.dto.ServiceResponseDTO;
+import apiTurnos.service.dto.request.ServiceRequestDTO;
+import apiTurnos.service.dto.response.ServiceResponseDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

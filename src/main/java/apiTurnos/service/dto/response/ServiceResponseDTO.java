@@ -1,4 +1,4 @@
-package apiTurnos.service.dto;
+package apiTurnos.service.dto.response;
 /*
   Clase utilizada para las respuestas/get del Service.
   */

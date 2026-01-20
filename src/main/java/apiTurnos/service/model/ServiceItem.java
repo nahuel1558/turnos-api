@@ -1,6 +1,6 @@
 package apiTurnos.service.model;
 
-import apiTurnos.service.dto.ServiceRequestDTO;
+import apiTurnos.service.dto.request.ServiceRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
 

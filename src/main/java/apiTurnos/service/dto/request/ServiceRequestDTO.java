@@ -1,4 +1,4 @@
-package apiTurnos.service.dto;
+package apiTurnos.service.dto.request;
 /**
  * Clase utilizada para la creacion/actualizacion del Service.
  * */
@@ -17,7 +17,6 @@ public class ServiceRequestDTO {
 
     // Anotacion que no permite que este en blanco la variable.
     @NotBlank(message = "El nombre es obligatorio")
-
     //Limita el tamaño de la variable.
     @Size(min = 2, max = 100, message = "El nombre de tener entre 2 y 100 caracteres")
     private String name;

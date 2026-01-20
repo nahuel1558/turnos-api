@@ -1,6 +1,6 @@
 package apiTurnos.service.command;
 
-import apiTurnos.service.dto.ServiceRequestDTO;
+import apiTurnos.service.dto.request.ServiceRequestDTO;
 import lombok.*;
 
 @Data

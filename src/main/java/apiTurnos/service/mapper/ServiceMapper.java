@@ -1,7 +1,7 @@
 package apiTurnos.service.mapper;
 
-import apiTurnos.service.dto.ServiceRequestDTO;
-import apiTurnos.service.dto.ServiceResponseDTO;
+import apiTurnos.service.dto.request.ServiceRequestDTO;
+import apiTurnos.service.dto.response.ServiceResponseDTO;
 import apiTurnos.service.model.ServiceItem;
 
 import java.util.List;

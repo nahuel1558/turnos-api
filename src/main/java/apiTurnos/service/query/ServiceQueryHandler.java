@@ -1,6 +1,6 @@
 package apiTurnos.service.query;
 
-import apiTurnos.service.dto.ServiceResponseDTO;
+import apiTurnos.service.dto.response.ServiceResponseDTO;
 import apiTurnos.service.mapper.ServiceMapper;
 import apiTurnos.service.model.ServiceItem;
 import apiTurnos.service.repository.ServiceQueryRepository;

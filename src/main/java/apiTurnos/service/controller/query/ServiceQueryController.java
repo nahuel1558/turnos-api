@@ -1,7 +1,7 @@
 package apiTurnos.service.controller.query;
 
 import apiTurnos.service.query.*;
-import apiTurnos.service.dto.ServiceResponseDTO;
+import apiTurnos.service.dto.response.ServiceResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,7 +1,7 @@
 package apiTurnos.appointment.model;
 
-import apiTurnos.barber.model.Barber;
-import apiTurnos.service.model.ServiceItem;
+import apiTurnos.barber.domain.model.Barber;
+import apiTurnos.service.domain.model.ServiceItem;
 import jakarta.persistence.*;
 import lombok.*;
 

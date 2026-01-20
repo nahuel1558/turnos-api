@@ -3,10 +3,10 @@ package apiTurnos.appointment.query;
 import apiTurnos.appointment.model.Appointment;
 import apiTurnos.appointment.model.AppointmentStatus;
 import apiTurnos.appointment.repository.AppointmentQueryRepository;
-import apiTurnos.barber.model.Barber;
-import apiTurnos.barber.repository.BarberQueryRepository;
-import apiTurnos.service.model.ServiceItem;
-import apiTurnos.service.repository.ServiceQueryRepository;
+import apiTurnos.barber.domain.model.Barber;
+import apiTurnos.barber.infrastructure.repository.BarberQueryRepository;
+import apiTurnos.service.domain.model.ServiceItem;
+import apiTurnos.service.infrastructure.repository.ServiceQueryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import apiTurnos.common.exception.NotFoundException;
@@ -49,8 +49,8 @@ public class GetAvailableSlotsHandler {
                 .map(a -> new TimeRange(a.getStartTime(), a.getEndTime()))
                 .toList();
 
-        LocalTime start = barber.getWorkStart();
-        LocalTime end = barber.getWorkEnd();
+        LocalTime start = barber.getWorkStartTime();
+        LocalTime end = barber.getWorkEndTime();
 
         List<AvailableSlotResponse> slots = new ArrayList<>();
         LocalTime cursor = start;

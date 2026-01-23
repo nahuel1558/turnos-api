@@ -1,4 +1,19 @@
 package apiTurnos.appointment.dto.response;
 
-public class AppointmentResponse {
-}
+import apiTurnos.appointment.model.AppointmentStatus;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+/**
+ * Respuesta estándar de un turno.
+ */
+public record  AppointmentResponse (
+        Long id,
+        Long userId,
+        Long barberId,
+        Long serviceId,
+        LocalDate date,
+        LocalTime startTime,
+        LocalTime endTime,
+        AppointmentStatus status
+) {}

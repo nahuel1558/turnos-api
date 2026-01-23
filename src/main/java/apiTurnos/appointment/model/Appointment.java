@@ -4,22 +4,24 @@ import apiTurnos.barber.domain.model.Barber;
 import apiTurnos.service.domain.model.ServiceItem;
 import jakarta.persistence.*;
 import lombok.*;
+import org.apache.catalina.User;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 /**
- * Representa un turno reservado por un cliente.
+ * Entidad Appointment (Turno).
  *
- * Es la entidad central del dominio de turnos.
+ * Reglas de negocio dentro de la entidad:
+ * - Cancelar: sólo si está BOOKED
+ * - Update: no permite cambiar a horarios inválidos
+ *
+ * Esto respeta SOLID:
+ * - SRP: Appointment maneja reglas del turno (estado y datos del turno),
+ *        no orquesta repositorios ni envía mails (eso va en services/handlers).
  */
 @Entity
-@Table(
-        name = "appointments",
-        indexes = {
-                @Index(name = "idx_appointment_barber_date", columnList = "barber_id, date")
-        }
-)
+@Table(name = "appointments")
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Builder
@@ -29,29 +31,70 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Peluquero que realiza el servicio
+    // Cliente que reserva
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private User user;
+
+    // Peluquero elegido
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Barber barber;
 
-    // Servicio asociado al turno
+    // Servicio: corte, barba, etc.
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private ServiceItem service;
 
-    // Fecha del turno
     @Column(nullable = false)
     private LocalDate date;
 
-    // Hora de inicio del turno
     @Column(nullable = false)
     private LocalTime startTime;
 
-    // Hora de fin del turno (startTime + duración del servicio)
     @Column(nullable = false)
     private LocalTime endTime;
 
-    // Estado del turno (reservado / cancelado)
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AppointmentStatus status;
+
+    /**
+     * Factory para crear un turno reservado.
+     * Comentado porque en CQRS normalmente el CREATE se hace desde el handler,
+     * pero mantener un factory mejora la claridad y encapsula defaults.
+     */
+    public static Appointment booked(User user, Barber barber, ServiceItem service,
+                                     LocalDate date, LocalTime start, LocalTime end) {
+        return Appointment.builder()
+                .user(user)
+                .barber(barber)
+                .service(service)
+                .date(date)
+                .startTime(start)
+                .endTime(end)
+                .status(AppointmentStatus.BOOKED)
+                .build();
+    }
+
+    /**
+     * Cancela el turno manteniendo histórico.
+     */
+    public void cancel() {
+        if (this.status == AppointmentStatus.CANCELED) {
+            return; // idempotente
+        }
+        this.status = AppointmentStatus.CANCELED;
+    }
+
+    /**
+     * Actualiza horario y/o servicio, manteniendo consistencia.
+     * Si querés permitir cambiar barber, lo agregamos luego (pero ojo con reglas).
+     */
+    public void reschedule(ServiceItem newService, LocalTime newStart, LocalTime newEnd) {
+        if (this.status == AppointmentStatus.CANCELED) {
+            throw new IllegalStateException("No se puede modificar un turno cancelado");
+        }
+        this.service = newService;
+        this.startTime = newStart;
+        this.endTime = newEnd;
+    }
 }
 

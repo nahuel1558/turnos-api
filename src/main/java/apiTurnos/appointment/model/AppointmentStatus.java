@@ -1,10 +1,11 @@
 package apiTurnos.appointment.model;
 
 /**
- * Estados posibles de un turno.
- * CANCELLED se mantiene para conservar historial.
+ * Estados del turno.
+ * BOOKED  -> reservado/confirmado
+ * CANCELED-> cancelado (no se elimina para auditoría)
  */
 public enum AppointmentStatus {
     BOOKED,
-    CANCELLED
+    CANCELED
 }

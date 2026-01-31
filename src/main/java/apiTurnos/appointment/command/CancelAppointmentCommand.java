@@ -1,4 +1,6 @@
 package apiTurnos.appointment.command;
-
-public class CancelAppointmentCommand {
-}
+/**
+ * Command: cancelar un turno.
+ * Mantiene el registro y cambia el estado a CANCELED.
+ */
+public record CancelAppointmentCommand(Long appointmentId) {}

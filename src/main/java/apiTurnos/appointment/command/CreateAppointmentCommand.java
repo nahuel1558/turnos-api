@@ -1,4 +1,18 @@
 package apiTurnos.appointment.command;
 
-public class CreateAppointmentCommand {
-}
+import java.time.LocalDate;
+import java.time.LocalTime;
+/**
+ * Command: crear un turno.
+ *
+ * SOLID:
+ * - SRP: este record sólo transporta datos (no valida, no calcula, no consulta DB)
+ * - OCP: si mañana agregamos "notes" o "paymentStatus", extendemos el command sin romper handler
+ */
+public record CreateAppointmentCommand(
+        Long userId,
+        Long barberId,
+        Long serviceId,
+        LocalDate date,
+        LocalTime startTime
+) {}

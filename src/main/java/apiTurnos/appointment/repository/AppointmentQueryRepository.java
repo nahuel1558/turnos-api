@@ -16,4 +16,6 @@ public interface AppointmentQueryRepository extends JpaRepository<Appointment, L
      * Obtiene los turnos reservados de un peluquero en una fecha específica.
      */
     List<Appointment> findByBarber_IdAndDateAndStatus(Long barberId, LocalDate date, AppointmentStatus status);
+
+    List<Appointment> findByBarber_IdAndDate(Long barberId, LocalDate date);
 }

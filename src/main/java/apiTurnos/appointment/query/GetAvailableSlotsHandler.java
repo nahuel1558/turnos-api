@@ -42,15 +42,18 @@ public class GetAvailableSlotsHandler {
 
         int duration = service.getDurationMinutes();
 
-        List<TimeRange> busyRanges = appointmentQueryRepository
+        List<Appointment> booked = appointmentQueryRepository
                 .findByBarber_IdAndDateAndStatus(query.barberId(), query.date(), AppointmentStatus.BOOKED)
                 .stream()
                 .sorted(Comparator.comparing(Appointment::getStartTime))
+                .toList();
+
+        List<TimeRange> busyRanges = booked.stream()
                 .map(a -> new TimeRange(a.getStartTime(), a.getEndTime()))
                 .toList();
 
-        LocalTime start = barber.getWorkStartTime();
-        LocalTime end = barber.getWorkEndTime();
+        LocalTime start = barber.getWorkStart();
+        LocalTime end = barber.getWorkEnd();
 
         List<AvailableSlotResponse> slots = new ArrayList<>();
         LocalTime cursor = start;
@@ -59,9 +62,7 @@ public class GetAvailableSlotsHandler {
             LocalTime candidateStart = cursor;
             LocalTime candidateEnd = cursor.plusMinutes(duration);
 
-            boolean overlaps = busyRanges.stream()
-                    .anyMatch(r -> r.overlaps(candidateStart, candidateEnd));
-
+            boolean overlaps = busyRanges.stream().anyMatch(r -> r.overlaps(candidateStart, candidateEnd));
             if (!overlaps) {
                 slots.add(new AvailableSlotResponse(candidateStart));
             }
@@ -72,10 +73,6 @@ public class GetAvailableSlotsHandler {
         return slots;
     }
 
-    /**
-     * Rango horario auxiliar para validar solapamientos.
-     * Convención: [inicio, fin) (fin exclusivo).
-     */
     private record TimeRange(LocalTime start, LocalTime end) {
         boolean overlaps(LocalTime aStart, LocalTime aEnd) {
             return aStart.isBefore(end) && aEnd.isAfter(start);

@@ -1,4 +1,10 @@
 package apiTurnos.appointment.query;
 
-public class GetBarberAgendaQuery {
-}
+import java.time.LocalDate;
+/**
+ * Query: agenda del peluquero (turnos del día).
+ */
+public record GetBarberAgendaQuery(
+        Long barberId,
+        LocalDate date
+) {}

@@ -1,9 +1,9 @@
-package apiTurnos.appointment.controller;
+package apiTurnos.appointment.presentation.controller;
 
-import apiTurnos.appointment.command.*;
-import apiTurnos.appointment.dto.request.CreateAppointmentRequest;
-import apiTurnos.appointment.dto.request.UpdateAppointmentRequest;
-import apiTurnos.appointment.dto.response.AppointmentResponse;
+import apiTurnos.appointment.application.command.*;
+import apiTurnos.appointment.presentation.dto.request.CreateAppointmentRequest;
+import apiTurnos.appointment.presentation.dto.request.UpdateAppointmentRequest;
+import apiTurnos.appointment.presentation.dto.response.AppointmentResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

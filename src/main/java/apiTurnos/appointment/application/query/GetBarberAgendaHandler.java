@@ -1,7 +1,7 @@
-package apiTurnos.appointment.query;
+package apiTurnos.appointment.application.query;
 
-import apiTurnos.appointment.dto.response.AppointmentSlotResponse;
-import apiTurnos.appointment.repository.AppointmentQueryRepository;
+import apiTurnos.appointment.presentation.dto.response.AppointmentSlotResponse;
+import apiTurnos.appointment.infrastructure.repository.AppointmentQueryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

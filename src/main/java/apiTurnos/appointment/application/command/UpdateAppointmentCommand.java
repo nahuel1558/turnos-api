@@ -1,4 +1,4 @@
-package apiTurnos.appointment.command;
+package apiTurnos.appointment.application.command;
 
 import java.time.LocalTime;
 /**

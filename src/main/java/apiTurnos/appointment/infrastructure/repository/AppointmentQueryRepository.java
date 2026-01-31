@@ -1,7 +1,7 @@
-package apiTurnos.appointment.repository;
+package apiTurnos.appointment.infrastructure.repository;
 
-import apiTurnos.appointment.model.Appointment;
-import apiTurnos.appointment.model.AppointmentStatus;
+import apiTurnos.appointment.domain.model.Appointment;
+import apiTurnos.appointment.domain.model.AppointmentStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;

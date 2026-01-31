@@ -1,6 +1,6 @@
-package apiTurnos.appointment.dto.response;
+package apiTurnos.appointment.presentation.dto.response;
 
-import apiTurnos.appointment.model.AppointmentStatus;
+import apiTurnos.appointment.domain.model.AppointmentStatus;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

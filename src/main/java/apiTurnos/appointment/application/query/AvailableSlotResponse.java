@@ -1,4 +1,4 @@
-package apiTurnos.appointment.query;
+package apiTurnos.appointment.application.query;
 
 import java.time.LocalTime;
 

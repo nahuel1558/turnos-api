@@ -1,11 +1,11 @@
-package apiTurnos.appointment.command;
+package apiTurnos.appointment.application.command;
 
-import apiTurnos.appointment.dto.response.AppointmentResponse;
-import apiTurnos.appointment.mapper.AppointmentMapper;
-import apiTurnos.appointment.model.Appointment;
-import apiTurnos.appointment.model.AppointmentStatus;
-import apiTurnos.appointment.repository.AppointmentCommandRepository;
-import apiTurnos.appointment.repository.AppointmentQueryRepository;
+import apiTurnos.appointment.presentation.dto.response.AppointmentResponse;
+import apiTurnos.appointment.infrastructure.mapper.AppointmentMapper;
+import apiTurnos.appointment.domain.model.Appointment;
+import apiTurnos.appointment.domain.model.AppointmentStatus;
+import apiTurnos.appointment.infrastructure.repository.AppointmentCommandRepository;
+import apiTurnos.appointment.infrastructure.repository.AppointmentQueryRepository;
 import apiTurnos.barber.domain.model.Barber;
 import apiTurnos.barber.infrastructure.repository.BarberQueryRepository;
 import apiTurnos.common.exception.NotFoundException;

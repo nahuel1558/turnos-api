@@ -1,4 +1,4 @@
-package apiTurnos.appointment.model;
+package apiTurnos.appointment.domain.model;
 
 /**
  * Estados del turno.

@@ -1,4 +1,4 @@
-package apiTurnos.appointment.dto.request;
+package apiTurnos.appointment.presentation.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 

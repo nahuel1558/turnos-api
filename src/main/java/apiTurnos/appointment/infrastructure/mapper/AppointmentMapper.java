@@ -1,7 +1,7 @@
-package apiTurnos.appointment.mapper;
+package apiTurnos.appointment.infrastructure.mapper;
 
-import apiTurnos.appointment.dto.response.AppointmentResponse;
-import apiTurnos.appointment.model.Appointment;
+import apiTurnos.appointment.presentation.dto.response.AppointmentResponse;
+import apiTurnos.appointment.domain.model.Appointment;
 import org.springframework.stereotype.Component;
 
 /**

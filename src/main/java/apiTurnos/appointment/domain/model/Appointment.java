@@ -1,4 +1,4 @@
-package apiTurnos.appointment.model;
+package apiTurnos.appointment.domain.model;
 
 import apiTurnos.barber.domain.model.Barber;
 import apiTurnos.service.domain.model.ServiceItem;

@@ -1,9 +1,8 @@
-package apiTurnos.appointment.controller;
+package apiTurnos.appointment.presentation.controller;
 
-import apiTurnos.appointment.dto.response.AppointmentSlotResponse;
-import apiTurnos.appointment.query.*;
+import apiTurnos.appointment.application.query.*;
+import apiTurnos.appointment.presentation.dto.response.AppointmentSlotResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

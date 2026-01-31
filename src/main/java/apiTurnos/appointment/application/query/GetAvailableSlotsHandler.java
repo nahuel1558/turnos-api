@@ -1,8 +1,8 @@
-package apiTurnos.appointment.query;
+package apiTurnos.appointment.application.query;
 
-import apiTurnos.appointment.model.Appointment;
-import apiTurnos.appointment.model.AppointmentStatus;
-import apiTurnos.appointment.repository.AppointmentQueryRepository;
+import apiTurnos.appointment.domain.model.Appointment;
+import apiTurnos.appointment.domain.model.AppointmentStatus;
+import apiTurnos.appointment.infrastructure.repository.AppointmentQueryRepository;
 import apiTurnos.barber.domain.model.Barber;
 import apiTurnos.barber.infrastructure.repository.BarberQueryRepository;
 import apiTurnos.service.domain.model.ServiceItem;

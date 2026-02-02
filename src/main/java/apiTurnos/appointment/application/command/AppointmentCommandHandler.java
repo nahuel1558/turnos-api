@@ -56,13 +56,13 @@ public class AppointmentCommandHandler {
 
     public AppointmentResponse handle(CreateAppointmentCommand cmd) {
         UserAccount user = userQueryRepository.findById(cmd.userId())
-                .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+                .orElseThrow(() -> new apiTurnos.common.exception.NotFoundException("Usuario no encontrado"));
 
         Barber barber = barberQueryRepository.findById(cmd.barberId())
-                .orElseThrow(() -> new NotFoundException("Peluquero no encontrado"));
+                .orElseThrow(() -> new apiTurnos.common.exception.NotFoundException("Peluquero no encontrado"));
 
         ServiceItem service = serviceQueryRepository.findById(cmd.serviceId())
-                .orElseThrow(() -> new NotFoundException("Servicio no encontrado"));
+                .orElseThrow(() -> new apiTurnos.common.exception.NotFoundException("Servicio no encontrado"));
 
         int duration = service.getDurationMinutes();
         LocalTime start = cmd.startTime();
@@ -85,13 +85,13 @@ public class AppointmentCommandHandler {
      */
     public AppointmentResponse handle(UpdateAppointmentCommand cmd) {
         Appointment appointment = appointmentCommandRepository.findById(cmd.appointmentId())
-                .orElseThrow(()-> new NotFoundException("Turno no encontrado"));
+                .orElseThrow(()-> new apiTurnos.common.exception.NotFoundException("Turno no encontrado"));
         if (appointment.getStatus() == AppointmentStatus.CANCELED) {
             throw new IllegalStateException("No se puede modificar el turno cancelado");
         }
 
         ServiceItem newService = serviceQueryRepository.findById(cmd.serviceId())
-                .orElseThrow(()-> new NotFoundException("Servicio no encontrado"));
+                .orElseThrow(()-> new apiTurnos.common.exception.NotFoundException("Servicio no encontrado"));
 
         int duration = newService.getDurationMinutes();
         LocalTime newStart = cmd.startTime();
@@ -120,7 +120,7 @@ public class AppointmentCommandHandler {
     public AppointmentResponse handle(CancelAppointmentCommand cmd) {
 
         Appointment appointment = appointmentQueryRepository.findById(cmd.appointmentId())
-                .orElseThrow(()-> new NotFoundException("Turno no encontrado"));
+                .orElseThrow(()-> new apiTurnos.common.exception.NotFoundException("Turno no encontrado"));
 
         appointment.cancel();
         Appointment saved = appointmentCommandRepository.save(appointment);
@@ -135,7 +135,7 @@ public class AppointmentCommandHandler {
      */
     public void handle(DeleteAppointmentCommand cmd) {
         Appointment appointment = appointmentQueryRepository.findById(cmd.appointmentId())
-                .orElseThrow(()-> new NotFoundException("Turno no encontrado"));
+                .orElseThrow(()-> new apiTurnos.common.exception.NotFoundException("Turno no encontrado"));
 
         appointmentCommandRepository.delete(appointment);
     }

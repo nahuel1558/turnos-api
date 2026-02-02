@@ -6,7 +6,7 @@ import apiTurnos.barber.domain.model.Barber;
 import apiTurnos.barber.presentation.dto.response.BarberResponseDTO;
 import apiTurnos.barber.presentation.dto.response.BarberSimpleResponseDTO;
 import apiTurnos.common.dto.PaginatedRequest;
-import apiTurnos.common.dto.PaginatedResponse;
+import apiTurnos.common.dto.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -66,7 +66,7 @@ public class BarberQueryController {
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Obtener barberos paginados",
             description = "Retorna barberos paginados para administración")
-    public ResponseEntity<PaginatedResponse<BarberSimpleResponseDTO>> getBarbersPaginated(
+    public ResponseEntity<PageResponse<BarberSimpleResponseDTO>> getBarbersPaginated(
             @Valid PaginatedRequest pagination,
 
             @Parameter(description = "Término de búsqueda en nombre o bio")
@@ -85,7 +85,7 @@ public class BarberQueryController {
         GetBarbersPaginatedQuery query = GetBarbersPaginatedQuery.fromParams(
                 pagination, searchTerm, specialty, !includeInactive);
 
-        PaginatedResponse<BarberSimpleResponseDTO> response = queryHandler.handle(query);
+        PageResponse<BarberSimpleResponseDTO> response = queryHandler.handle(query);
         return ResponseEntity.ok(response);
     }
 

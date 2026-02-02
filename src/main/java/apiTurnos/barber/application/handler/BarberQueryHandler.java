@@ -3,7 +3,7 @@ package apiTurnos.barber.application.handler;
 import apiTurnos.barber.application.query.*;
 import apiTurnos.barber.presentation.dto.response.BarberResponseDTO;
 import apiTurnos.barber.presentation.dto.response.BarberSimpleResponseDTO;
-import apiTurnos.common.dto.PaginatedResponse;
+import apiTurnos.common.dto.PageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -33,7 +33,7 @@ public class BarberQueryHandler {
 
 
     // Para paginación
-    public PaginatedResponse<BarberSimpleResponseDTO> handle(GetBarbersPaginatedQuery query) {
+    public PageResponse<BarberSimpleResponseDTO> handle(GetBarbersPaginatedQuery query) {
         return getBarbersPaginatedUseCase.execute(query);
     }
 

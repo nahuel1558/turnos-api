@@ -10,7 +10,7 @@ import java.time.LocalTime;
  * - OCP: si mañana agregamos "notes" o "paymentStatus", extendemos el command sin romper handler
  */
 public record CreateAppointmentCommand(
-        Long userId,
+        String userId,
         Long barberId,
         Long serviceId,
         LocalDate date,

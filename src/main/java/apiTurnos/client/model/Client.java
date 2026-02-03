@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -104,19 +105,18 @@ public class Client {
     // === QUERY METHODS ===
 
     public String getFullName() {
-        return userAccount != null ? userAccount.getFullName() : "Cliente";
+        return userAccount != null ? userAccount.fullName() : "Cliente";
     }
 
     public String getEmail() {
         return userAccount != null ? userAccount.getEmail() : null;
     }
 
-    public String getPhone() {
-        return userAccount != null ? userAccount.getPhone() : null;
-    }
-
     public boolean isActiveClient() {
-        return this.active && userAccount != null && userAccount.isEnabled();
+        return this.active &&
+                Optional.ofNullable(userAccount)
+                        .map(account -> !account.isDeleted())
+                        .orElse(false);
     }
 
 }

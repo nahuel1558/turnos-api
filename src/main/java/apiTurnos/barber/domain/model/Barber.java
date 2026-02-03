@@ -267,14 +267,11 @@ public class Barber {
     }
 
     public String getUserFullName() {
-        return userAccount != null ? userAccount.getFullName() : displayName;
+        return userAccount != null ? userAccount.fullName() : displayName;
     }
 
     public String getUserEmail() {
         return userAccount != null ? userAccount.getEmail() : null;
     }
 
-    public String getUserPhone() {
-        return userAccount != null ? userAccount.getPhone() : null;
-    }
 }

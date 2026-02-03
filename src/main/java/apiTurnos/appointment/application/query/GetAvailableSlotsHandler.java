@@ -52,8 +52,8 @@ public class GetAvailableSlotsHandler {
                 .map(a -> new TimeRange(a.getStartTime(), a.getEndTime()))
                 .toList();
 
-        LocalTime start = barber.getWorkStart();
-        LocalTime end = barber.getWorkEnd();
+        LocalTime start = barber.getWorkStartTime();
+        LocalTime end = barber.getWorkEndTime();
 
         List<AvailableSlotResponse> slots = new ArrayList<>();
         LocalTime cursor = start;

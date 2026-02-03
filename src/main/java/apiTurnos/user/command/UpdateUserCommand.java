@@ -1,4 +1,18 @@
 package apiTurnos.user.command;
 
-public class UpdateUserCommand {
-}
+import apiTurnos.user.model.Role;
+import apiTurnos.user.model.UserStatus;
+
+/**
+ * Command CQRS: actualizar usuario.
+ */
+public record UpdateUserCommand(
+        String id,
+        String email,
+        String firstName,
+        String lastName,
+        String password,
+        Role role,
+        UserStatus status
+) { }
+

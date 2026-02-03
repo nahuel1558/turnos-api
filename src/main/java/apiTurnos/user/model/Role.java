@@ -1,10 +1,11 @@
 package apiTurnos.user.model;
 
 /**
- * Roles del sistema
- * Se pueden ajustar segun nuestro MVP.
+ * Roles disponibles del sistema (MVP).
  */
 public enum Role {
-    CLIENT,
-    ADMIN
+    ADMIN,
+    BARBER,
+    CLIENT
 }
+

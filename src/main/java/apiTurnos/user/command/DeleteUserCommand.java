@@ -1,4 +1,7 @@
 package apiTurnos.user.command;
 
-public class DeleteUserCommand {
-}
+/**
+ * Command CQRS: eliminar (soft delete) usuario.
+ */
+public record DeleteUserCommand(String id) { }
+

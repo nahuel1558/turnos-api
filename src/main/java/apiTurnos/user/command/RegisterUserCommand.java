@@ -1,15 +1,15 @@
 package apiTurnos.user.command;
 
+import apiTurnos.user.model.Role;
 
-import lombok.*;
+/**
+ * Command CQRS: registrar usuario.
+ */
+public record RegisterUserCommand(
+        String email,
+        String firstName,
+        String lastName,
+        String password,
+        Role role
+) { }
 
-@Data
-@Builder
-@NoArgsConstructor @AllArgsConstructor
-public class RegisterUserCommand {
-    private String email;
-    private String password;
-    private String firstName;
-    private String lastName;
-    private String phone;
-}

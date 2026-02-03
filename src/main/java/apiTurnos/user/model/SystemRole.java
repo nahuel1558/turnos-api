@@ -3,6 +3,10 @@ package apiTurnos.user.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Entidad para roles del sistema (si querés RBAC más adelante).
+ * Por ahora es opcional, pero ya queda preparada.
+ */
 @Entity
 @Table(name = "system_roles")
 @Getter
@@ -16,14 +20,10 @@ public class SystemRole {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false, length = 50)
-    private String name;  // "ROLE_CLIENT", "ROLE_BARBER", "ROLE_ADMIN"
-
-    @Column(length = 200)
-    private String description;
-
-    public SystemRole(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
+    /**
+     * Rol del sistema.
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, unique = true, length = 30)
+    private Role role;
 }

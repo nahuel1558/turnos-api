@@ -1,15 +1,21 @@
 package apiTurnos.user.dto.response;
 
-import jakarta.validation.constraints.NotBlank;
+import apiTurnos.user.model.Role;
+import apiTurnos.user.model.UserStatus;
 
-import java.util.Set;
+import java.time.LocalDateTime;
 
-public record UserResponse (
-        Long id,
+/**
+ * Response público del usuario (sin passwordHash).
+ */
+public record UserResponse(
+        String id,
         String email,
         String firstName,
         String lastName,
-        String phone,
-        boolean enabled,
-        Set<String> roles
-) {}
+        Role role,
+        UserStatus status,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
+) { }
+

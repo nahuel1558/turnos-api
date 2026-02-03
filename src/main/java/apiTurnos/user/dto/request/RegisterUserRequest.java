@@ -1,11 +1,15 @@
 package apiTurnos.user.dto.request;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import apiTurnos.user.model.Role;
 
+/**
+ * Request para registrar usuario.
+ */
 public record RegisterUserRequest(
-        @Email @NotBlank String email,
-        @NotBlank String password,
-        @NotBlank String firstName,
-        @NotBlank String lastName
-) {}
+        String email,
+        String firstName,
+        String lastName,
+        String password,
+        Role role
+) { }
+

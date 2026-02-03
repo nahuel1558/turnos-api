@@ -1,4 +1,7 @@
 package apiTurnos.user.query;
 
-public class GetUserByIdQuery {
-}
+/**
+ * Query CQRS: obtener usuario por id.
+ */
+public record GetUserByIdQuery(String id) { }
+

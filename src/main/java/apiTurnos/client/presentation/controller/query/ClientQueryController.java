@@ -1,6 +1,6 @@
-package apiTurnos.client.controller;
+package apiTurnos.client.presentation.controller.query;
 
-import apiTurnos.client.dto.response.ClientResponseDTO;
+import apiTurnos.client.presentation.dto.response.ClientResponse;
 import apiTurnos.client.mapper.ClientMapper;
 import apiTurnos.client.query.GetClientByIdQuery;
 import apiTurnos.client.query.GetClientByUserIdQuery;
@@ -20,24 +20,24 @@ public class ClientQueryController {
 
     @GetMapping("/{clientId}")
     @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN') or hasRole('BARBER')")
-    public ResponseEntity<ClientResponseDTO> getClientById(@PathVariable Long clientId) {
+    public ResponseEntity<ClientResponse> getClientById(@PathVariable Long clientId) {
         var query = new GetClientByIdQuery();
         query.setClientId(clientId);
 
         return getClientHandler.handle(query)
-                .map(clientMapper::toResponseDTO)
+                .map(clientMapper::toResponse)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/user/{userId}")
     @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
-    public ResponseEntity<ClientResponseDTO> getClientByUserId(@PathVariable Long userId) {
+    public ResponseEntity<ClientResponse> getClientByUserId(@PathVariable Long userId) {
         var query = new GetClientByUserIdQuery();
         query.setUserId(userId);
 
         return getClientHandler.handle(query)
-                .map(clientMapper::toResponseDTO)
+                .map(clientMapper::toResponse)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

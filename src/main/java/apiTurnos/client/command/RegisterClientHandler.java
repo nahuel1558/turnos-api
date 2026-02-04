@@ -2,13 +2,11 @@ package apiTurnos.client.command;
 
 import apiTurnos.client.model.Client;
 import apiTurnos.client.repository.ClientCommandRepository;
-import apiTurnos.user.model.SystemRole;
+import apiTurnos.common.exception.NotFoundException;
 import apiTurnos.user.model.UserAccount;
-import apiTurnos.user.repository.SystemRoleRepository;
 import apiTurnos.user.repository.UserCommandRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,58 +19,38 @@ public class RegisterClientHandler {
 
     private final UserCommandRepository userRepository;
     private final ClientCommandRepository clientRepository;
-    private final SystemRoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
+
 
     @Transactional
-    public UserAccount handle(RegisterClientCommand command) {
-        log.info("Processing RegisterClientCommand for email: {}", command.getEmail());
+    public Client handle(RegisterClientCommand command) {
+        log.info("Processing RegisterClientCommand for user ID: {}", command.getUserId());
 
-        // Validar email único
-        if (userRepository.existsByEmail(command.getEmail())) {
-            throw new IllegalArgumentException("Email ya registrado");
+        // 1. Verificar que el usuario existe
+        UserAccount user = userRepository.findById(command.getUserId())
+                .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+
+        // 2. Verificar que el usuario no sea ya cliente
+        if (clientRepository.existsByUserAccountId(command.getUserId())) {
+            throw new IllegalArgumentException("El usuario ya tiene un perfil de cliente");
         }
 
-        // Crear UserAccount
-        UserAccount user = UserAccount.builder()
-                .email(command.getEmail())
-                .password(passwordEncoder.encode(command.getPassword()))
-                .firstName(command.getFirstName())
-                .lastName(command.getLastName())
-                .phone(command.getPhone())
-                .enabled(true)
-                .build();
-
-        // Asignar rol CLIENT
-        SystemRole clientRole = roleRepository.findByName("ROLE_CLIENT")
-                .orElseGet(() -> createRole("ROLE_CLIENT", "Cliente del sistema"));
-        user.addRole(clientRole);
-
-        // Guardar UserAccount
-        UserAccount savedUser = userRepository.save(user);
-
-        // Crear Client profile
+        // 3. Crear Client profile
         Client client = Client.builder()
-                .userAccount(savedUser)
+                .userAccount(user)
+                .notes(command.getNotes())
+                .allergies(command.getAllergies())
+                .preferredBarberId(command.getPreferredBarberId())
                 .prefersEmailNotifications(command.getPrefersEmailNotifications())
                 .prefersSmsNotifications(command.getPrefersSmsNotifications())
                 .active(true)
                 .build();
 
-        clientRepository.save(client);
+        // 4. Guardar
+        Client savedClient = clientRepository.save(client);
 
-        log.info("Client registered successfully: ID={}, UserID={}",
-                client.getId(), savedUser.getId());
+        log.info("Client profile created successfully: ClientID={}, UserID={}",
+                savedClient.getId(), user.getId());
 
-        return savedUser;
-    }
-
-    private SystemRole createRole(String name, String description) {
-        return roleRepository.save(
-                SystemRole.builder()
-                        .name(name)
-                        .description(description)
-                        .build()
-        );
+        return savedClient;
     }
 }

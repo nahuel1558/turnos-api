@@ -1,13 +1,13 @@
 package apiTurnos.client.presentation.controller.query;
 
-import apiTurnos.client.presentation.dto.response.ClientResponse;
 import apiTurnos.client.mapper.ClientMapper;
+import apiTurnos.client.model.Client;
+import apiTurnos.client.presentation.dto.response.ClientResponse;
 import apiTurnos.client.query.GetClientByIdQuery;
 import apiTurnos.client.query.GetClientByUserIdQuery;
 import apiTurnos.client.query.GetClientHandler;
+import apiTurnos.common.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,29 +16,23 @@ import org.springframework.web.bind.annotation.*;
 public class ClientQueryController {
 
     private final GetClientHandler getClientHandler;
-    private final ClientMapper clientMapper;
+    private final ClientMapper mapper = new ClientMapper();
 
     @GetMapping("/{clientId}")
-    @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN') or hasRole('BARBER')")
-    public ResponseEntity<ClientResponse> getClientById(@PathVariable Long clientId) {
-        var query = new GetClientByIdQuery();
-        query.setClientId(clientId);
+    public ClientResponse getById(@PathVariable Long clientId) {
 
-        return getClientHandler.handle(query)
-                .map(clientMapper::toResponse)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Client client = getClientHandler.handle(new GetClientByIdQuery(clientId))
+                .orElseThrow(() -> new NotFoundException("Cliente no encontrado"));
+
+        return mapper.toResponse(client);
     }
 
-    @GetMapping("/user/{userId}")
-    @PreAuthorize("hasRole('CLIENT') or hasRole('ADMIN')")
-    public ResponseEntity<ClientResponse> getClientByUserId(@PathVariable Long userId) {
-        var query = new GetClientByUserIdQuery();
-        query.setUserId(userId);
+    @GetMapping("/by-user/{userId}")
+    public ClientResponse getByUserId(@PathVariable String userId) {
 
-        return getClientHandler.handle(query)
-                .map(clientMapper::toResponse)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Client client = getClientHandler.handle(new GetClientByUserIdQuery(userId))
+                .orElseThrow(() -> new NotFoundException("Cliente no encontrado para el usuario"));
+
+        return mapper.toResponse(client);
     }
 }

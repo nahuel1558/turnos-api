@@ -1,10 +1,10 @@
 package apiTurnos.appointment.domain.model;
 
 import apiTurnos.barber.domain.model.Barber;
+import apiTurnos.client.model.Client;
 import apiTurnos.service.domain.model.ServiceItem;
 import jakarta.persistence.*;
 import lombok.*;
-import org.apache.catalina.User;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -13,17 +13,17 @@ import java.time.LocalTime;
  * Entidad Appointment (Turno).
  *
  * Reglas de negocio dentro de la entidad:
- * - Cancelar: sólo si está BOOKED
- * - Update: no permite cambiar a horarios inválidos
+ * - Cancelar: idempotente
+ * - Reschedule: no permite modificar si está cancelado
  *
- * Esto respeta SOLID:
- * - SRP: Appointment maneja reglas del turno (estado y datos del turno),
- *        no orquesta repositorios ni envía mails (eso va en services/handlers).
+ * SRP: Appointment maneja estado y reglas del turno.
  */
 @Entity
 @Table(name = "appointments")
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Appointment {
 
@@ -31,16 +31,19 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Cliente que reserva
+    // Cliente que reserva (perfil de cliente, no UserAccount ni Tomcat User)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private User user;
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
 
     // Peluquero elegido
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "barber_id", nullable = false)
     private Barber barber;
 
     // Servicio: corte, barba, etc.
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "service_id", nullable = false)
     private ServiceItem service;
 
     @Column(nullable = false)
@@ -58,13 +61,12 @@ public class Appointment {
 
     /**
      * Factory para crear un turno reservado.
-     * Comentado porque en CQRS normalmente el CREATE se hace desde el handler,
-     * pero mantener un factory mejora la claridad y encapsula defaults.
+     * Encapsula defaults (status BOOKED).
      */
-    public static Appointment booked(User user, Barber barber, ServiceItem service,
+    public static Appointment booked(Client client, Barber barber, ServiceItem service,
                                      LocalDate date, LocalTime start, LocalTime end) {
         return Appointment.builder()
-                .user(user)
+                .client(client)
                 .barber(barber)
                 .service(service)
                 .date(date)
@@ -75,18 +77,16 @@ public class Appointment {
     }
 
     /**
-     * Cancela el turno manteniendo histórico.
+     * Cancela el turno manteniendo historial.
+     * Idempotente: si ya está cancelado, no hace nada.
      */
     public void cancel() {
-        if (this.status == AppointmentStatus.CANCELED) {
-            return; // idempotente
-        }
+        if (this.status == AppointmentStatus.CANCELED) return;
         this.status = AppointmentStatus.CANCELED;
     }
 
     /**
-     * Actualiza horario y/o servicio, manteniendo consistencia.
-     * Si querés permitir cambiar barber, lo agregamos luego (pero ojo con reglas).
+     * Reagenda el turno.
      */
     public void reschedule(ServiceItem newService, LocalTime newStart, LocalTime newEnd) {
         if (this.status == AppointmentStatus.CANCELED) {
@@ -97,4 +97,5 @@ public class Appointment {
         this.endTime = newEnd;
     }
 }
+
 

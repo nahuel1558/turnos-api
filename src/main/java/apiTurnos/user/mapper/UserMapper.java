@@ -3,12 +3,13 @@ package apiTurnos.user.mapper;
 import apiTurnos.user.dto.request.RegisterUserRequest;
 import apiTurnos.user.dto.request.UpdateUserRequest;
 import apiTurnos.user.dto.response.UserResponse;
-import apiTurnos.user.model.Role;
 import apiTurnos.user.model.UserAccount;
 import apiTurnos.user.model.UserStatus;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Mapper de User (convierte entre DTOs y entidades).
@@ -28,7 +29,6 @@ public class UserMapper {
                 .lastName(trim(request.lastName()))
                 .phone(trim(request.phone()))
                 .passwordHash(passwordHash)
-                .role(request.role() == null ? Role.CLIENT : request.role())
                 .status(UserStatus.ACTIVE)
                 .createdAt(now)
                 .updatedAt(now)
@@ -49,9 +49,6 @@ public class UserMapper {
         if (request.phone() != null && !request.phone().isBlank()){
             user.setPhone((trim(request.phone())));
         }
-        if (request.role() != null) {
-            user.setRole(request.role());
-        }
         if (request.status() != null) {
             user.setStatus(request.status());
         }
@@ -63,13 +60,19 @@ public class UserMapper {
     }
 
     public UserResponse toResponse(UserAccount user) {
+
+        // Convertir Set<SystemRole> a Set<String> con los nombres
+        Set<String> roleNames = user.getRoles().stream()
+                .map(role -> role.getName())  // role.getName() devuelve "ROLE_CLIENT", etc.
+                .collect(Collectors.toSet());
+
         return new UserResponse(
                 user.getId(),
                 user.getEmail(),
                 user.getFirstName(),
                 user.getLastName(),
                 user.getPhone(),
-                user.getRole(),
+                roleNames,
                 user.getStatus(),
                 user.getCreatedAt(),
                 user.getUpdatedAt()

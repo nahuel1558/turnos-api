@@ -10,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -20,37 +18,30 @@ public class RegisterClientHandler {
     private final UserCommandRepository userRepository;
     private final ClientCommandRepository clientRepository;
 
-
     @Transactional
     public Client handle(RegisterClientCommand command) {
-        log.info("Processing RegisterClientCommand for user ID: {}", command.getUserId());
+        log.info("RegisterClientCommand for userId={}", command.getUserId());
 
-        // 1. Verificar que el usuario existe
         UserAccount user = userRepository.findById(command.getUserId())
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
 
-        // 2. Verificar que el usuario no sea ya cliente
-        if (clientRepository.existsByUserAccountId(command.getUserId())) {
+        if (clientRepository.existsByUserAccount_Id(command.getUserId())) {
             throw new IllegalArgumentException("El usuario ya tiene un perfil de cliente");
         }
 
-        // 3. Crear Client profile
         Client client = Client.builder()
                 .userAccount(user)
                 .notes(command.getNotes())
-                .allergies(command.getAllergies())
+                .allergies(command.getAllergies() == null ? new java.util.HashSet<>() : new java.util.HashSet<>(command.getAllergies()))
                 .preferredBarberId(command.getPreferredBarberId())
-                .prefersEmailNotifications(command.getPrefersEmailNotifications())
-                .prefersSmsNotifications(command.getPrefersSmsNotifications())
+                .prefersEmailNotifications(command.getPrefersEmailNotifications() != null ? command.getPrefersEmailNotifications() : true)
+                .prefersSmsNotifications(command.getPrefersSmsNotifications() != null ? command.getPrefersSmsNotifications() : false)
                 .active(true)
                 .build();
 
-        // 4. Guardar
-        Client savedClient = clientRepository.save(client);
+        Client saved = clientRepository.save(client);
 
-        log.info("Client profile created successfully: ClientID={}, UserID={}",
-                savedClient.getId(), user.getId());
-
-        return savedClient;
+        log.info("Client created: clientId={}, userId={}", saved.getId(), user.getId());
+        return saved;
     }
 }

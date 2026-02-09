@@ -2,23 +2,24 @@ package apiTurnos.client.command;
 
 import apiTurnos.client.presentation.dto.request.RegisterClientRequest;
 import lombok.*;
-import jakarta.validation.constraints.*;
 
 import java.util.Set;
 
 @Data
 @Builder
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class RegisterClientCommand {
-    private String userId;  // Usuario existente
+
+    private String userId; // String por UserAccount.id
     private String notes;
     private Set<String> allergies;
     private Long preferredBarberId;
-    private Boolean prefersEmailNotifications = true;
-    private Boolean prefersSmsNotifications = false;
 
-    public static RegisterClientCommand fromRequest(
-            RegisterClientRequest request) {
+    private Boolean prefersEmailNotifications;
+    private Boolean prefersSmsNotifications;
+
+    public static RegisterClientCommand fromRequest(RegisterClientRequest request) {
         return RegisterClientCommand.builder()
                 .userId(request.getUserId())
                 .notes(request.getNotes())

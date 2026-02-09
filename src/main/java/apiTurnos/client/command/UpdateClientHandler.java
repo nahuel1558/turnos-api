@@ -2,7 +2,7 @@ package apiTurnos.client.command;
 
 import apiTurnos.client.model.Client;
 import apiTurnos.client.repository.ClientCommandRepository;
-import apiTurnos.user.repository.UserCommandRepository;
+import apiTurnos.common.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,29 +14,44 @@ import org.springframework.transaction.annotation.Transactional;
 public class UpdateClientHandler {
 
     private final ClientCommandRepository clientRepository;
-    private final UserCommandRepository userRepository;
 
     @Transactional
-    public Client handle(Long clientId, UpdateClientCommand command) {
-        log.info("Processing UpdateClientCommand for clientId: {}", clientId);
+    public Client handle(UpdateClientCommand command) {
 
-        Client client = clientRepository.findById(clientId)
-                .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
+        Client client = clientRepository.findById(command.getClientId())
+                .orElseThrow(() -> new NotFoundException("Cliente no encontrado"));
 
-        // Actualizar preferencias
-        client.updatePreferences(
-                command.getNotes()
-        );
+        // Notas
+        if (command.getNotes() != null) {
+            client.setNotes(command.getNotes());
+        }
 
-        // Actualizar preferencias de notificación
-        client.setNotificationPreferences(
-                command.getPrefersEmailNotifications(),
-                command.getPrefersSmsNotifications()
-        );
+        // Alergias (si viene null, no toca; si viene vacío, lo deja vacío)
+        if (command.getAllergies() != null) {
+            client.getAllergies().clear();
+            client.getAllergies().addAll(command.getAllergies());
+        }
 
-        Client updatedClient = clientRepository.save(client);
-        log.info("Client updated successfully: ID={}", clientId);
+        // Preferencia de barbero
+        if (command.getPreferredBarberId() != null) {
+            client.setPreferredBarberId(command.getPreferredBarberId());
+        }
 
-        return updatedClient;
+        // Preferencias de notificación
+        if (command.getPrefersEmailNotifications() != null) {
+            client.setPrefersEmailNotifications(command.getPrefersEmailNotifications());
+        }
+        if (command.getPrefersSmsNotifications() != null) {
+            client.setPrefersSmsNotifications(command.getPrefersSmsNotifications());
+        }
+
+        // Estado activo
+        if (command.getActive() != null) {
+            client.setActive(command.getActive());
+        }
+
+        Client saved = clientRepository.save(client);
+        log.info("Client updated clientId={}", saved.getId());
+        return saved;
     }
 }

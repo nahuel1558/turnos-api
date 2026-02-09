@@ -7,17 +7,20 @@ import java.util.Set;
 
 @Data
 @Builder
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class UpdateClientCommand {
+
     private Long clientId;
     private String notes;
     private Set<String> allergies;
     private Long preferredBarberId;
+
     private Boolean prefersEmailNotifications;
     private Boolean prefersSmsNotifications;
+    private Boolean active;
 
-    public static UpdateClientCommand fromUpdateRequest(
-            Long clientId, UpdateClientRequest request) {
+    public static UpdateClientCommand fromRequest(Long clientId, UpdateClientRequest request) {
         return UpdateClientCommand.builder()
                 .clientId(clientId)
                 .notes(request.getNotes())
@@ -25,6 +28,7 @@ public class UpdateClientCommand {
                 .preferredBarberId(request.getPreferredBarberId())
                 .prefersEmailNotifications(request.getPrefersEmailNotifications())
                 .prefersSmsNotifications(request.getPrefersSmsNotifications())
+                .active(request.getActive())
                 .build();
     }
 }

@@ -7,13 +7,13 @@ import java.time.LocalTime;
 
 /**
  * Request del endpoint de creación.
- * Nota: userId lo podés sacar del JWT en el futuro.
- * En MVP lo recibimos para probar rápido.
+ * MVP: recibimos userId para poder ubicar su Client.
  */
-public record  CreateAppointmentRequest (
-        @NotNull Long userId,
+public record CreateAppointmentRequest(
+        @NotNull String userId,
         @NotNull Long barberId,
         @NotNull Long serviceId,
         @NotNull LocalDate date,
         @NotNull LocalTime startTime
 ) {}
+

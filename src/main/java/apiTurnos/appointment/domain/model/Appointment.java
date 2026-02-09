@@ -12,18 +12,16 @@ import java.time.LocalTime;
 /**
  * Entidad Appointment (Turno).
  *
- * Reglas de negocio dentro de la entidad:
- * - Cancelar: idempotente
- * - Reschedule: no permite modificar si está cancelado
+ * SRP:
+ * - Mantiene estado + reglas del turno (cancelación, reprogramación).
  *
- * SRP: Appointment maneja estado y reglas del turno.
+ * Importante:
+ * - El turno pertenece a un Client (perfil), y el Client está ligado a UserAccount.
  */
 @Entity
 @Table(name = "appointments")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 @Builder
 public class Appointment {
 
@@ -31,7 +29,7 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Cliente que reserva (perfil de cliente, no UserAccount ni Tomcat User)
+    // Cliente que reserva (perfil)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
@@ -59,10 +57,7 @@ public class Appointment {
     @Column(nullable = false)
     private AppointmentStatus status;
 
-    /**
-     * Factory para crear un turno reservado.
-     * Encapsula defaults (status BOOKED).
-     */
+    /** Factory: crea un turno reservado (default BOOKED). */
     public static Appointment booked(Client client, Barber barber, ServiceItem service,
                                      LocalDate date, LocalTime start, LocalTime end) {
         return Appointment.builder()
@@ -76,18 +71,16 @@ public class Appointment {
                 .build();
     }
 
-    /**
-     * Cancela el turno manteniendo historial.
-     * Idempotente: si ya está cancelado, no hace nada.
-     */
+    /** Cancelación idempotente (mantiene histórico). */
     public void cancel() {
         if (this.status == AppointmentStatus.CANCELED) return;
+        if (this.status != AppointmentStatus.BOOKED) {
+            throw new IllegalStateException("Solo se puede cancelar un turno en estado BOOKED");
+        }
         this.status = AppointmentStatus.CANCELED;
     }
 
-    /**
-     * Reagenda el turno.
-     */
+    /** Reprogramación: no permite modificar cancelado. */
     public void reschedule(ServiceItem newService, LocalTime newStart, LocalTime newEnd) {
         if (this.status == AppointmentStatus.CANCELED) {
             throw new IllegalStateException("No se puede modificar un turno cancelado");
@@ -97,5 +90,3 @@ public class Appointment {
         this.endTime = newEnd;
     }
 }
-
-

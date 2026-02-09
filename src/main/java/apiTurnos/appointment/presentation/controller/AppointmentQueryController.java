@@ -1,42 +1,50 @@
 package apiTurnos.appointment.presentation.controller;
 
-import apiTurnos.appointment.application.query.*;
-import apiTurnos.appointment.presentation.dto.response.AppointmentSlotResponse;
+import apiTurnos.appointment.application.query.GetBarberAgendaHandler;
+import apiTurnos.appointment.application.query.GetBarberAgendaQuery;
+import apiTurnos.appointment.application.query.GetClientAppointmentsHandler;
+import apiTurnos.appointment.application.query.GetClientAppointmentsQuery;
+import apiTurnos.appointment.presentation.dto.response.AppointmentResponse;
+import apiTurnos.appointment.presentation.dto.response.BarberAgendaItemResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Controller REST para consultas de turnos.
- * No realiza lógica de negocio, solo delega al handler.
- */
 @RestController
 @RequestMapping("/api/appointments")
 @RequiredArgsConstructor
 public class AppointmentQueryController {
-    private final GetAvailableSlotsHandler getAvailableSlotsHandler;
-    private final GetBarberAgendaHandler getBarberAgendaHandler;
 
-    @GetMapping("/available-slots")
-    public ResponseEntity<List<AvailableSlotResponse>> availableSlots(
-            @RequestParam Long barberId,
-            @RequestParam Long serviceId,
-            @RequestParam LocalDate date
+    private final GetBarberAgendaHandler getBarberAgendaHandler;
+    private final GetClientAppointmentsHandler getClientAppointmentsHandler;
+
+    /**
+     * Agenda del barbero por día
+     * Ej: GET /api/appointments/barbers/1/agenda?date=2026-02-09
+     */
+    @GetMapping("/barbers/{barberId}/agenda")
+    public List<BarberAgendaItemResponse> getBarberAgenda(
+            @PathVariable Long barberId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ) {
-        var query = new GetAvailableSlotsQuery(barberId, serviceId, date);
-        return ResponseEntity.ok(getAvailableSlotsHandler.handle(query));
+        return getBarberAgendaHandler.handle(new GetBarberAgendaQuery(barberId, date));
     }
 
-    @GetMapping("/agenda")
-    public ResponseEntity<List<AppointmentSlotResponse>> agenda(
-            @RequestParam Long barberId,
-            @RequestParam LocalDate date
+    /**
+     * Turnos de un cliente por rango
+     * Ej: GET /api/appointments/clients/10?from=2026-02-01&to=2026-02-28
+     */
+    @GetMapping("/clients/{clientId}")
+    public List<AppointmentResponse> getClientAppointments(
+            @PathVariable Long clientId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to
     ) {
-        var query = new GetBarberAgendaQuery(barberId, date);
-        return ResponseEntity.ok(getBarberAgendaHandler.handle(query));
+        return getClientAppointmentsHandler.handle(new GetClientAppointmentsQuery(clientId, from, to));
     }
 }
+
 

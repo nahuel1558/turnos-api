@@ -17,7 +17,7 @@ import java.util.Set;
 public class BarberResponseDTO {
 
     private Long id;
-    private Long userId;
+    private String userId;
     private String displayName;
     private String professionalTitle;
     private String bio;

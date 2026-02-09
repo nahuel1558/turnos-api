@@ -3,6 +3,7 @@ package apiTurnos.client.model;
 import apiTurnos.user.model.UserAccount;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
@@ -21,21 +22,20 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // RELACIÓN 1:1 CON USER ACCOUNT
-    @OneToOne(fetch = FetchType.LAZY)
+    /**
+     * Relación 1:1 con la cuenta global del usuario.
+     * - El userId es String (UUID-like) según tu UserAccount.
+     */
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", unique = true, nullable = false)
     private UserAccount userAccount;
 
-    // PREFERENCIAS
+    // Preferencias
     @Column(name = "preferred_barber_id")
     private Long preferredBarberId;
 
-
     @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(
-            name = "client_allergies",
-            joinColumns = @JoinColumn(name = "client_id")
-    )
+    @CollectionTable(name = "client_allergies", joinColumns = @JoinColumn(name = "client_id"))
     @Column(name = "allergy", length = 100)
     @Builder.Default
     private Set<String> allergies = new HashSet<>();
@@ -43,21 +43,21 @@ public class Client {
     @Column(name = "notes", length = 1000)
     private String notes;
 
-    // FIDELIDAD
+    // Fidelidad
     @Column(name = "total_appointments", nullable = false)
     @Builder.Default
     private Integer totalAppointments = 0;
 
-    // NOTIFICACIONES
-    @Column(name = "prefers_email_notifications")
+    // Notificaciones
+    @Column(name = "prefers_email_notifications", nullable = false)
     @Builder.Default
     private Boolean prefersEmailNotifications = true;
 
-    @Column(name = "prefers_sms_notifications")
+    @Column(name = "prefers_sms_notifications", nullable = false)
     @Builder.Default
     private Boolean prefersSmsNotifications = false;
 
-    // AUDITORÍA
+    // Auditoría
     @Column(nullable = false)
     @Builder.Default
     private Boolean active = true;
@@ -74,27 +74,14 @@ public class Client {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // === COMMAND METHODS ===
+    // ====== Domain behavior (simple y seguro para MVP) ======
 
-    public void updatePreferences(String notes) {
+    public void updateProfile(String notes, Set<String> allergies, Long preferredBarberId) {
         if (notes != null) this.notes = notes;
+        if (allergies != null) this.allergies = new HashSet<>(allergies);
+        if (preferredBarberId != null) this.preferredBarberId = preferredBarberId;
         this.updatedAt = LocalDateTime.now();
     }
-
-    public void addAllergy(String allergy) {
-        if (allergy != null && !allergy.trim().isEmpty()) {
-            this.allergies.add(allergy.trim());
-            this.updatedAt = LocalDateTime.now();
-        }
-    }
-
-    public void removeAllergy(String allergy) {
-        if (allergy != null) {
-            this.allergies.remove(allergy.trim());
-            this.updatedAt = LocalDateTime.now();
-        }
-    }
-
 
     public void setNotificationPreferences(Boolean email, Boolean sms) {
         if (email != null) this.prefersEmailNotifications = email;
@@ -102,7 +89,7 @@ public class Client {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // === QUERY METHODS ===
+    // ====== Helpers de lectura ======
 
     public String getFullName() {
         return userAccount != null ? userAccount.fullName() : "Cliente";
@@ -113,10 +100,7 @@ public class Client {
     }
 
     public boolean isActiveClient() {
-        return this.active &&
-                Optional.ofNullable(userAccount)
-                        .map(account -> !account.isDeleted())
-                        .orElse(false);
+        return Boolean.TRUE.equals(this.active) &&
+                Optional.ofNullable(userAccount).map(a -> !a.isDeleted()).orElse(false);
     }
-
 }

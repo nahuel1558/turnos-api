@@ -1,26 +1,10 @@
 package apiTurnos.common.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/**
- * DTO genérico para respuestas que solo devuelven un identificador.
- *
- * ✔ Se usa típicamente en comandos CREATE / DELETE
- * ✔ Evita devolver entidades completas
- * ✔ Reutilizable en cualquier módulo (user, appointment, barber, etc.)
- *
- * Ejemplo de uso:
- * - Crear usuario → devuelve ID
- * - Crear turno → devuelve ID
- * - Eliminar entidad → devuelve ID eliminado
- */
-@Getter
-@AllArgsConstructor
-public class IdResponse {
+@Schema(description = "Respuesta genérica que devuelve un ID")
+public record IdResponse(
+        @Schema(description = "ID del recurso creado/afectado", example = "1")
+        Long id
+) {}
 
-    /**
-     * Identificador de la entidad afectada.
-     */
-    private final String id;
-}

@@ -15,7 +15,7 @@ public class RegisterBarberCommand {
     // User data
 
     @NotBlank @Id
-    private Long idUser;
+    private String idUser;
 
     // Barber specific data
     @NotBlank

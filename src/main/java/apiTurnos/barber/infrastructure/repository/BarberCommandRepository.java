@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface BarberCommandRepository extends JpaRepository<Barber, Long> {
 
 
-    boolean existsByUserAccountId(Long userId);
+    boolean existsByUserAccountId(String userId);
 
     boolean existsByDisplayNameAndActiveTrue(String displayName);
 

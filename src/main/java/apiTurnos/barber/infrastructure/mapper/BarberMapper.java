@@ -30,7 +30,7 @@ public class BarberMapper {
                 .specialties(barber.getSpecialties())
                 .userFullName(barber.getUserFullName())
                 .userEmail(barber.getUserEmail())
-                .userPhone(barber.getUserPhone())
+                .userPhone(barber.getUserAccount().getPhone())
                 .workStartTime(barber.getWorkStartTime())
                 .workEndTime(barber.getWorkEndTime())
                 .breakStartTime(barber.getBreakStartTime())

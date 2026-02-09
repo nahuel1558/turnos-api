@@ -32,7 +32,7 @@ public class BarberValidator {
         }
     }
 
-    public void validateUserAccountNotAlreadyBarber(Long userId, boolean userAlreadyBarber) {
+    public void validateUserAccountNotAlreadyBarber(String userId, boolean userAlreadyBarber) {
         if (userAlreadyBarber) {
             throw new BarberDomainException("El usuario ya tiene un perfil de barbero");
         }

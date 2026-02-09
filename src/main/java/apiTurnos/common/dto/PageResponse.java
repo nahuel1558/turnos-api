@@ -1,65 +1,64 @@
 package apiTurnos.common.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 /**
- * Respuesta genérica paginada.
- * Útil si después agregan búsqueda de turnos, barberos, usuarios, etc.
+ * DTO genérico para respuestas paginadas.
+ *
+ * SRP: solo representa una página de resultados para la API.
+ * Reutilizable en cualquier módulo (barber, client, appointment, etc).
  */
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public record PageResponse<T>(
-        List<T> items,
-        int page,
-        int size,
-        long totalItems,
-        int totalPages
-) {
+@Schema(description = "Respuesta paginada genérica")
+public class PageResponse<T> {
+
+    @Schema(description = "Contenido de la página")
+    private List<T> content;
+
+    @Schema(description = "Número de página actual (0-based)", example = "0")
+    private int page;
+
+    @Schema(description = "Tamaño de página", example = "10")
+    private int size;
+
+    @Schema(description = "Total de elementos", example = "57")
+    private long totalElements;
+
+    @Schema(description = "Total de páginas", example = "6")
+    private int totalPages;
+
+    @Schema(description = "¿Es la primera página?", example = "true")
+    private boolean first;
+
+    @Schema(description = "¿Es la última página?", example = "false")
+    private boolean last;
+
+    @Schema(description = "Cantidad de elementos en esta página", example = "10")
+    private int numberOfElements;
+
     /**
-     * Factory method para crear una respuesta desde un Page de Spring
+     * Factory: construye un PageResponse a partir de un Page de Spring.
+     *
+     * OCP: se puede reutilizar con cualquier DTO sin modificar código.
      */
     public static <T> PageResponse<T> fromPage(Page<T> page) {
         return PageResponse.<T>builder()
-                .items(page.getContent())
+                .content(page.getContent())
                 .page(page.getNumber())
                 .size(page.getSize())
-                .totalItems(page.getTotalElements())
+                .totalElements(page.getTotalElements())
                 .totalPages(page.getTotalPages())
-                .build();
-    }
-
-    /**
-     * Factory method para crear una respuesta vacía
-     */
-    public static <T> PageResponse<T> empty() {
-        return PageResponse.<T>builder()
-                .items(List.of())
-                .page(0)
-                .size(0)
-                .totalItems(0)
-                .totalPages(0)
-                .build();
-    }
-
-    /**
-     * Factory method para crear una respuesta desde una lista
-     */
-    public static <T> PageResponse<T> fromList(
-            List<T> items,
-            int page,
-            int size,
-            long totalItems) {
-
-        int totalPages = (int) Math.ceil((double) totalItems / size);
-
-        return PageResponse.<T>builder()
-                .items(items)
-                .page(page)
-                .size(size)
-                .totalItems(totalItems)
-                .totalPages(totalPages)
+                .first(page.isFirst())
+                .last(page.isLast())
+                .numberOfElements(page.getNumberOfElements())
                 .build();
     }
 }

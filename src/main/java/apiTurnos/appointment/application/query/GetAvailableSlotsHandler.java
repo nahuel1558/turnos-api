@@ -43,7 +43,7 @@ public class GetAvailableSlotsHandler {
         int duration = service.getDurationMinutes();
 
         List<Appointment> booked = appointmentQueryRepository
-                .findByBarber_IdAndDateAndStatus(query.barberId(), query.date(), AppointmentStatus.BOOKED)
+                .findByBarber_IdAndDateOrderByStartTimeAsc(query.barberId(), query.date())
                 .stream()
                 .sorted(Comparator.comparing(Appointment::getStartTime))
                 .toList();

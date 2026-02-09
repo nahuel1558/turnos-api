@@ -167,7 +167,7 @@ public class AppointmentCommandHandler {
 
     private void validateNoOverlap(Long barberId, java.time.LocalDate date, LocalTime start, LocalTime end) {
         List<Appointment> booked = appointmentQueryRepository
-                .findByBarber_IdAndDateAndStatus(barberId, date, AppointmentStatus.BOOKED)
+                .findByBarber_IdAndDateAndStatusOrderByStartTimeAsc(barberId, date, AppointmentStatus.BOOKED)
                 .stream()
                 .sorted(Comparator.comparing(Appointment::getStartTime))
                 .toList();
@@ -180,7 +180,7 @@ public class AppointmentCommandHandler {
 
     private void validateNoOverlapExcluidingAppointment(Long barberId, java.time.LocalDate date, LocalTime start, LocalTime end, Long excludeId) {
         List<Appointment> booked = appointmentQueryRepository
-                .findByBarber_IdAndDateAndStatus(barberId, date, AppointmentStatus.BOOKED);
+                .findByBarber_IdAndDateAndStatusOrderByStartTimeAsc(barberId, date, AppointmentStatus.BOOKED);
 
         boolean overlaps = booked.stream()
                 .filter(a -> !a.getId().equals(excludeId))

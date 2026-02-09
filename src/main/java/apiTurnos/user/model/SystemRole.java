@@ -20,10 +20,10 @@ public class SystemRole {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * Rol del sistema.
-     */
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, unique = true, length = 30)
-    private Role role;
+    @Column(name = "name", nullable = false, unique = true, length = 50)
+    private String name;  // "ROLE_ADMIN", "ROLE_BARBER", "ROLE_CLIENT"
+
+    public SystemRole(String name) {
+        this.name = name;
+    }
 }

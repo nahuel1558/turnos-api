@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface SystemRoleRepository extends JpaRepository<SystemRole, Long> {
-    Optional<SystemRole> findByRole(Role role);
+    Optional<SystemRole> findByName(String name);
 }
 

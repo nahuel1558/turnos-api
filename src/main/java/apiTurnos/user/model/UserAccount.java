@@ -38,6 +38,9 @@ public class UserAccount {
     @Column(nullable = false, length = 80)
     private String lastName;
 
+    @Column(nullable = false, length = 80)
+    private String phone;
+
     /**
      * Guardar SIEMPRE hash, nunca plain text.
      */

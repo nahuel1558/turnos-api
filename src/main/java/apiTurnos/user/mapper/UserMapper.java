@@ -26,6 +26,7 @@ public class UserMapper {
                 .email(normalizeEmail(request.email()))
                 .firstName(trim(request.firstName()))
                 .lastName(trim(request.lastName()))
+                .phone(trim(request.phone()))
                 .passwordHash(passwordHash)
                 .role(request.role() == null ? Role.CLIENT : request.role())
                 .status(UserStatus.ACTIVE)
@@ -44,6 +45,9 @@ public class UserMapper {
         }
         if (request.lastName() != null && !request.lastName().isBlank()) {
             user.setLastName(trim(request.lastName()));
+        }
+        if (request.phone() != null && !request.phone().isBlank()){
+            user.setPhone((trim(request.phone())));
         }
         if (request.role() != null) {
             user.setRole(request.role());
@@ -64,6 +68,7 @@ public class UserMapper {
                 user.getEmail(),
                 user.getFirstName(),
                 user.getLastName(),
+                user.getPhone(),
                 user.getRole(),
                 user.getStatus(),
                 user.getCreatedAt(),

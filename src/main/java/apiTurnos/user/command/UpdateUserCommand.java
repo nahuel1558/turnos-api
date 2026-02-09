@@ -11,6 +11,7 @@ public record UpdateUserCommand(
         String email,
         String firstName,
         String lastName,
+        String phone,
         String password,
         Role role,
         UserStatus status

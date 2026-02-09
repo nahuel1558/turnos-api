@@ -27,6 +27,7 @@ public class UserCommandController {
                         request.email(),
                         request.firstName(),
                         request.lastName(),
+                        request.phone(),
                         request.password(),
                         request.role()
                 )
@@ -45,6 +46,7 @@ public class UserCommandController {
                         request.firstName(),
                         request.lastName(),
                         request.password(),
+                        request.phone(),
                         request.role(),
                         request.status()
                 )

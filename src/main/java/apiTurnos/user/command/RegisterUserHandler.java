@@ -37,6 +37,7 @@ public class RegisterUserHandler implements RegisterUserUseCase {
                         command.email(),
                         command.firstName(),
                         command.lastName(),
+                        command.phone(),
                         command.password(),
                         command.role()
                 ),

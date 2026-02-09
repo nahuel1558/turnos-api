@@ -9,6 +9,7 @@ public record RegisterUserRequest(
         String email,
         String firstName,
         String lastName,
+        String phone,
         String password,
         Role role
 ) { }

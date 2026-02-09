@@ -36,6 +36,7 @@ public class UserCommandHandler {
                         command.email(),
                         command.firstName(),
                         command.lastName(),
+                        command.phone(),
                         command.password(),
                         command.role(),
                         command.status()

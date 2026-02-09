@@ -40,5 +40,4 @@ public interface BarberQueryRepository extends JpaRepository<Barber, Long>,
             "OR LOWER(s) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
     List<Barber> searchByDisplayNameOrSpecialty(@Param("searchTerm") String searchTerm);
 
-    List<Barber> findAll(BarberSpecification spec, Sort sort);
 }

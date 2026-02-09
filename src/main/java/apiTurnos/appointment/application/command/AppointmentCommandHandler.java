@@ -8,6 +8,8 @@ import apiTurnos.appointment.infrastructure.repository.AppointmentCommandReposit
 import apiTurnos.appointment.infrastructure.repository.AppointmentQueryRepository;
 import apiTurnos.barber.domain.model.Barber;
 import apiTurnos.barber.infrastructure.repository.BarberQueryRepository;
+import apiTurnos.client.model.Client;
+import apiTurnos.client.repository.ClientQueryRepository;
 import apiTurnos.common.exception.NotFoundException;
 import apiTurnos.service.domain.model.ServiceItem;
 import apiTurnos.service.infrastructure.repository.ServiceQueryRepository;
@@ -39,6 +41,8 @@ public class AppointmentCommandHandler {
 
     private final AppointmentCommandRepository appointmentCommandRepository;
     private final AppointmentQueryRepository appointmentQueryRepository;
+    private final ClientQueryRepository clientQueryRepository;
+
 
     private final UserQueryRepository userQueryRepository;
     private final BarberQueryRepository barberQueryRepository;
@@ -55,27 +59,38 @@ public class AppointmentCommandHandler {
      */
 
     public AppointmentResponse handle(CreateAppointmentCommand cmd) {
-        UserAccount user = userQueryRepository.findById(cmd.userId())
-                .orElseThrow(() -> new apiTurnos.common.exception.NotFoundException("Usuario no encontrado"));
 
+        // 1) Validar usuario existe (si lo querés seguir validando)
+        UserAccount user = userQueryRepository.findById(cmd.userId())
+                .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+
+        // 2) Validar que ese usuario tenga perfil Client
+        Client client = clientQueryRepository.findByUserAccount_Id(user.getId())
+                .orElseThrow(() -> new NotFoundException("El usuario no tiene perfil de cliente"));
+
+        // 3) Barber y Service
         Barber barber = barberQueryRepository.findById(cmd.barberId())
-                .orElseThrow(() -> new apiTurnos.common.exception.NotFoundException("Peluquero no encontrado"));
+                .orElseThrow(() -> new NotFoundException("Peluquero no encontrado"));
 
         ServiceItem service = serviceQueryRepository.findById(cmd.serviceId())
-                .orElseThrow(() -> new apiTurnos.common.exception.NotFoundException("Servicio no encontrado"));
+                .orElseThrow(() -> new NotFoundException("Servicio no encontrado"));
 
+        // 4) Calcular fin según duración
         int duration = service.getDurationMinutes();
         LocalTime start = cmd.startTime();
         LocalTime end = start.plusMinutes(duration);
 
+        // 5) Validaciones de negocio
         validateWithinWorkHours(barber, start, end);
         validateNoOverlap(barber.getId(), cmd.date(), start, end);
 
-        Appointment appointment = Appointment.booked((User) user, barber, service, cmd.date(), start, end);
+        // 6) Crear y guardar
+        Appointment appointment = Appointment.booked(client, barber, service, cmd.date(), start, end);
         Appointment saved = appointmentCommandRepository.save(appointment);
 
         return appointmentMapper.toResponse(saved);
     }
+
 
     /**
      * UPDATE:

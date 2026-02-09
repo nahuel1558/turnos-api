@@ -1,10 +1,7 @@
 package apiTurnos.client.presentation.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -18,7 +15,7 @@ public class ClientSimpleResponse {
     @Schema(description = "ID del cliente", example = "1")
     private Long id;
 
-    @Schema(description = "ID del usuario", example = "10")
+    @Schema(description = "ID del usuario", example = "f47ac10b-58cc-4372-a567-0e02b2c3d479")
     private String userId;
 
     @Schema(description = "Nombre completo", example = "Juan Pérez")
@@ -26,9 +23,6 @@ public class ClientSimpleResponse {
 
     @Schema(description = "Email", example = "cliente@ejemplo.com")
     private String email;
-
-    @Schema(description = "Teléfono", example = "+5491155555555")
-    private String phone;
 
     @Schema(description = "Total de turnos", example = "15")
     private Integer totalAppointments;

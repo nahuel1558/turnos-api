@@ -85,7 +85,6 @@ public class RegisterBarberUseCase {
         return roleRepository.save(
                 SystemRole.builder()
                         .name("ROLE_BARBER")
-                        .description("Barbero del sistema")
                         .build()
         );
     }

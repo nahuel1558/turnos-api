@@ -5,6 +5,7 @@ import apiTurnos.user.command.*;
 import apiTurnos.user.dto.request.RegisterUserRequest;
 import apiTurnos.user.dto.request.UpdateUserRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class UserCommandController {
     private final UserCommandHandler userCommandHandler;
 
     @PostMapping
-    public ResponseEntity<IdResponse> register(@RequestBody RegisterUserRequest request) {
+    public ResponseEntity<String> register(@RequestBody RegisterUserRequest request) {
 
         String id = registerUserUseCase.handle(
                 new RegisterUserCommand(
@@ -33,7 +34,7 @@ public class UserCommandController {
                 )
         );
 
-        return ResponseEntity.ok(new IdResponse(id));
+        return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
 
     @PutMapping("/{id}")

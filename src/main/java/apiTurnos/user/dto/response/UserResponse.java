@@ -4,6 +4,7 @@ import apiTurnos.user.model.Role;
 import apiTurnos.user.model.UserStatus;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 /**
  * Response público del usuario (sin passwordHash).
@@ -14,9 +15,9 @@ public record UserResponse(
         String firstName,
         String lastName,
         String phone,
-        Role role,
+        Set<String> roles,
         UserStatus status,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
-) { }
+){}
 

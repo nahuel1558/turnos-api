@@ -4,12 +4,14 @@ import apiTurnos.appointment.domain.model.AppointmentStatus;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+
 /**
  * Respuesta estándar de un turno.
  */
-public record  AppointmentResponse (
+public record AppointmentResponse(
         Long id,
-        Long userId,
+        Long clientId,
+        String userId,
         Long barberId,
         Long serviceId,
         LocalDate date,
@@ -17,3 +19,4 @@ public record  AppointmentResponse (
         LocalTime endTime,
         AppointmentStatus status
 ) {}
+

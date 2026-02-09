@@ -1,11 +1,9 @@
-// GetClientByUserIdQuery.java
 package apiTurnos.client.query;
 
-import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import jakarta.validation.constraints.NotBlank;
 
-@Data
-public class GetClientByUserIdQuery {
-    @NotNull
-    private Long userId;
-}
+public record GetClientByUserIdQuery(
+        @NotBlank String userId
+) {}
+
+

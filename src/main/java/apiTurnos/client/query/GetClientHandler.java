@@ -18,16 +18,17 @@ public class GetClientHandler {
     private final ClientQueryRepository clientRepository;
 
     public Optional<Client> handle(GetClientByIdQuery query) {
-        log.debug("Processing GetClientByIdQuery: {}", query.getClientId());
-        return clientRepository.findById(query.getClientId());
+        log.debug("GetClientByIdQuery: {}", query.clientId());
+        return clientRepository.findById(query.clientId());
     }
 
     public Optional<Client> handle(GetClientByUserIdQuery query) {
-        log.debug("Processing GetClientByUserIdQuery: {}", query.getUserId());
-        return clientRepository.findByUserAccountId(query.getUserId());
+        log.debug("GetClientByUserIdQuery: {}", query.userId());
+        return clientRepository.findByUserAccount_Id(query.userId());
     }
 
-    public boolean existsByUserId(Long userId) {
-        return clientRepository.existsByUserAccountId(userId);
+    public boolean existsByUserId(String userId) {
+        return clientRepository.existsByUserAccount_Id(userId);
     }
 }
+

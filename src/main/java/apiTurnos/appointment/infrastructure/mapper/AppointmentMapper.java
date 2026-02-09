@@ -6,14 +6,15 @@ import org.springframework.stereotype.Component;
 
 /**
  * Mapper SRP: convierte entidad -> DTO de salida.
- * No contiene lógica de negocio, sólo transformación.
  */
 @Component
 public class AppointmentMapper {
+
     public AppointmentResponse toResponse(Appointment a) {
         return new AppointmentResponse(
                 a.getId(),
-                a.getUser().getId(),
+                a.getClient().getId(),                         // clientId
+                a.getClient().getUserAccount().getId(),        // userId real
                 a.getBarber().getId(),
                 a.getService().getId(),
                 a.getDate(),
@@ -23,3 +24,4 @@ public class AppointmentMapper {
         );
     }
 }
+

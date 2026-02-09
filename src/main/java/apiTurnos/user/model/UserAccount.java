@@ -32,6 +32,9 @@ public class UserAccount {
     @Column(nullable = false, unique = true, length = 120)
     private String email;
 
+    @Column(length = 30)
+    private String phone;
+
     @Column(nullable = false, length = 80)
     private String firstName;
 

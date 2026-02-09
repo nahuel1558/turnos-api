@@ -9,7 +9,7 @@ import java.util.Set;
 public class RegisterBarberRequest {
 
     @NotNull(message = "User ID es requerido")
-    private Long userId;
+    private String userId;
 
     @NotBlank(message = "Display name es requerido")
     @Size(min = 2, max = 100, message = "Display name debe tener entre 2 y 100 caracteres")

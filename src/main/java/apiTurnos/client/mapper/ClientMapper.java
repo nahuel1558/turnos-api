@@ -3,9 +3,11 @@ package apiTurnos.client.mapper;
 import apiTurnos.client.model.Client;
 import apiTurnos.client.presentation.dto.response.ClientResponse;
 import apiTurnos.client.presentation.dto.response.ClientSimpleResponse;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class ClientMapper {
 
     public ClientResponse toResponse(Client client) {

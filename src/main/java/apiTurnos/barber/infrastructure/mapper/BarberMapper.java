@@ -10,9 +10,7 @@ import apiTurnos.barber.presentation.dto.response.BarberSimpleResponseDTO;
 import apiTurnos.barber.presentation.dto.response.BarberScheduleResponseDTO;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
+
 import java.util.Set;
 
 @Component

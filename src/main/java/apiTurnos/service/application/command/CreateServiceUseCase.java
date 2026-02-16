@@ -45,7 +45,7 @@ public class CreateServiceUseCase {
      */
 
     private boolean existsServiceByNameAndActiveTrue(String name){
-        return  repository.existByNameAndActiveTrue(name);
+        return  repository.existsByNameAndActiveTrue(name);
     }
 
     private ServiceItem saveService(ServiceItem serviceItem){

@@ -1,6 +1,5 @@
 package apiTurnos.user.command;
 
-import apiTurnos.common.exception.NotFoundException;
 import apiTurnos.user.mapper.UserMapper;
 import apiTurnos.user.model.UserAccount;
 import apiTurnos.user.repository.UserCommandRepository;

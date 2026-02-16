@@ -5,6 +5,7 @@ import apiTurnos.user.dto.request.UpdateUserRequest;
 import apiTurnos.user.dto.response.UserResponse;
 import apiTurnos.user.model.UserAccount;
 import apiTurnos.user.model.UserStatus;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
  * SRP:
  * - Solo mapeo (sin lógica de persistencia ni casos de uso).
  */
+@Component
 public class UserMapper {
 
     public UserAccount toNewEntity(RegisterUserRequest request, String passwordHash) {

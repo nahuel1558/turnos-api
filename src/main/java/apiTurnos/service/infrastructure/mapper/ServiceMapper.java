@@ -2,11 +2,12 @@ package apiTurnos.service.infrastructure.mapper;
 
 import apiTurnos.service.presentation.dto.response.ServiceResponseDTO;
 import apiTurnos.service.domain.model.ServiceItem;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@Component
 public class ServiceMapper {
 
 

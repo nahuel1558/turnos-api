@@ -57,7 +57,7 @@ public class UpdateServiceUseCase {
     }
 
     private Boolean existsServiceByNameAndIdNotActiveTrue(String name, Long idService){
-        return repository.existByNameAndIdNotActiveTrue(name, idService);
+        return repository.existsByNameAndActiveTrueAndIdNot(name, idService);
     }
 
     private ServiceItem saveService(ServiceItem serviceItem){

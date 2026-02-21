@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mariadb://localhost:3306/peluqueriadb?useSSL=false&allowPublicKeyRetrieval=true
     username: root
-    password: 1234
+    password: admin
     driver-class-name: org.mariadb.jdbc.Driver
 
   jpa:
@@ -22,5 +22,8 @@ logging:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql: TRACE
 
-# Solo para desarrollo
-spring.security.enabled: false
+security:
+  jwt:
+    # IMPORTANTE: debe ser BASE64 (mínimo ~32 bytes antes de base64)
+    secret: "YEGPPGnvdhHbct9XcY7bdDD03v5hnJlx+NSRIG8xz7F1ZqsCstiKwbZsywMS6ax2nzWwOHLa9+EZKyAlQStRqA=="
+    expiration-ms: 86400000

@@ -19,7 +19,7 @@ public class RegisterUserHandler implements RegisterUserUseCase {
     private final UserQueryRepository userQueryRepository;
     private final PasswordEncoder passwordEncoder;
 
-    private final UserMapper userMapper = new UserMapper();
+    private final UserMapper userMapper;
 
     @Override
     public String handle(RegisterUserCommand command) {

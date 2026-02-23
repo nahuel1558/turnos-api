@@ -18,7 +18,7 @@ public class JwtService {
     private final long expirationMinutes;
 
     public JwtService(
-            @Value("${jwt.secret}") String secret,
+            @Value("${jwt.secret:YEGPPGnvdhHbct9XcY7bdDD03v5hnJlx+NSRIG8xz7F1ZqsCstiKwbZsywMS6ax2nzWwOHLa9+EZKyAlQStRqA==}") String secret,
             @Value("${jwt.expiration-minutes:120}") long expirationMinutes
     ) {
         // HS256 requiere key suficientemente larga (>= 32 bytes aprox)

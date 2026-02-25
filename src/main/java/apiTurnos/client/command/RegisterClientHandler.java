@@ -3,7 +3,9 @@ package apiTurnos.client.command;
 import apiTurnos.client.model.Client;
 import apiTurnos.client.repository.ClientCommandRepository;
 import apiTurnos.common.exception.NotFoundException;
+import apiTurnos.user.model.SystemRole;
 import apiTurnos.user.model.UserAccount;
+import apiTurnos.user.repository.SystemRoleRepository;
 import apiTurnos.user.repository.UserCommandRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,7 @@ public class RegisterClientHandler {
 
     private final UserCommandRepository userRepository;
     private final ClientCommandRepository clientRepository;
+    private final SystemRoleRepository roleRepository;
 
     @Transactional
     public Client handle(RegisterClientCommand command) {
@@ -28,6 +31,11 @@ public class RegisterClientHandler {
         if (clientRepository.existsByUserAccount_Id(command.getUserId())) {
             throw new IllegalArgumentException("El usuario ya tiene un perfil de cliente");
         }
+
+        SystemRole clientRole = roleRepository.findByName("ROLE_CLIENT")
+                .orElseGet(this::createClientRole);
+        user.addRole(clientRole);
+        userRepository.save(user);
 
         Client client = Client.builder()
                 .userAccount(user)
@@ -43,5 +51,13 @@ public class RegisterClientHandler {
 
         log.info("Client created: clientId={}, userId={}", saved.getId(), user.getId());
         return saved;
+    }
+
+    private SystemRole createClientRole() {
+        return roleRepository.save(
+                SystemRole.builder()
+                        .name("ROLE_CLIENT")
+                        .build()
+        );
     }
 }

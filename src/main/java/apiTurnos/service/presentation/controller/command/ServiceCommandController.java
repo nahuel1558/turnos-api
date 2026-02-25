@@ -38,7 +38,7 @@ public class ServiceCommandController {
         return ResponseEntity.ok(response);
     }
 
-    // Anotacion "DELETE"(Identifica el uso de "DELETE"). Metodo para "BORRAR/DELTE" un servicio por "ID".
+    // Anotacion "DELETE"(Identifica el uso de "DELETE"). Metodo para "BORRAR/DELETE" un servicio por "ID".
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteService(@PathVariable Long id){
         DeleteServiceCommand command = DeleteServiceCommand.builder()

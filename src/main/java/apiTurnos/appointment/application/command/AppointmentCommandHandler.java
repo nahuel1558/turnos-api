@@ -146,7 +146,7 @@ public class AppointmentCommandHandler {
     /**
      * DELETE:
      * - Elimina definitivamente
-     * - Útil para admin/testing, pero en produccion suele preferirse CNACEL
+     * - Útil para admin/testing, pero en produccion suele preferirse CANCEL
      */
     public void handle(DeleteAppointmentCommand cmd) {
         Appointment appointment = appointmentQueryRepository.findById(cmd.appointmentId())

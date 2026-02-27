@@ -14,7 +14,7 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+backend/.idea
 *.iws
 *.iml
 *.ipr
@@ -28,6 +28,18 @@ target/
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
+
+### Backend (java) ###
+backend/target/
+*.jar
+*.war
+
+### Frontend (node) ###
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/dist/
 
 ### VS Code ###
 .vscode/
